@@ -1,25 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LeetCode
 {
     class Program
     {
+        private static AutoResetEvent event_1 = new AutoResetEvent(true);
+        private static AutoResetEvent event_2 = new AutoResetEvent(false);
         static void Main(string[] args)
         {
-            ListNode aa = new ListNode(2) { next = new ListNode(4) { next = new ListNode(3) } };
-            ListNode bb = new ListNode(5) { next = new ListNode(6) { next = new ListNode(4) } };
+            //ListNode aa = new ListNode(2) { next = new ListNode(4) { next = new ListNode(3) } };
+            //ListNode bb = new ListNode(5) { next = new ListNode(6) { next = new ListNode(4) } };
             //ListNode cc = AddTwoNumbers(aa, bb);
             //int aac = LengthOfLongestSubstring("pwwbcb");
             //string aacc = LongestPalindrome("pweewbcb");
             //IsPalindrome(123343621);
-            int[] nums = { 3, 2, 3, 1, 3, 3, 1 };
-            Console.WriteLine(removeElement2(nums, 3));
+            //int[] nums = { 3, 2, 3, 1, 3, 3, 1 };
+            //Console.WriteLine(removeElement2(nums, 3));
             //char[][] grid = new char[4][] { new char[3] { '1', '1', '1' }, new char[3] { '0', '1', '0' }, new char[3] { '1', '0', '0' }, new char[3] { '1', '0', '1' } };
             //char[][] grid = new char[4][] { new char[5] { '1', '1', '1', '1', '0' }, new char[5] { '1', '1', '0', '1', '0' }, new char[5] { '1', '1', '0', '0', '0' }, new char[5] { '0', '0', '0', '0', '0' } };
             //Console.WriteLine(NumIslands(grid, 3));
-            Console.WriteLine("-----------------------------------------------------------");
+            Foo foo = new Foo();
+            Action A = () => { Console.Write("first"); };
+            Action B = () => { Console.Write("second"); };
+            Action C = () => { Console.Write("third"); };
+            //Thread t1 = new Thread(() => foo.First(A));
+            //t1.Start();
+            //Thread t3 = new Thread(() => foo.Third(C));
+            //t3.Start();
+            //Thread t2 = new Thread(() => foo.Second(B));
+            //t2.Start();
+
+            //Console.WriteLine("-----------------------------------------------------------");
+        }
+
+        public class Foo
+        {
+            AutoResetEvent reset1 = new AutoResetEvent(false);
+            AutoResetEvent reset2 = new AutoResetEvent(false);
+            public Foo()
+            {
+
+            }
+
+            public void First(Action printFirst)
+            {
+                // printFirst() outputs "first". Do not change or remove this line.
+                printFirst();
+                reset1.Set();
+            }
+
+            public void Second(Action printSecond)
+            {
+                reset1.WaitOne();
+                // printSecond() outputs "second". Do not change or remove this line.
+                printSecond();
+                reset2.Set();
+            }
+
+            public void Third(Action printThird)
+            {
+                reset2.WaitOne();
+                // printThird() outputs "third". Do not change or remove this line.
+                printThird();
+            }
         }
 
         public static int RemoveElement(int[] nums, int val)
