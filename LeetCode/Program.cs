@@ -13,12 +13,85 @@ namespace LeetCode
             //ListNode cc = AddTwoNumbers(aa, bb);
             //int aac = LengthOfLongestSubstring("pwwbcb");
             //string aacc = LongestPalindrome("pweewbcb");
-            IsPalindrome(123343621);
-            Console.WriteLine("1111");
+            //IsPalindrome(123343621);
+            int[] nums = { 3, 2, 3, 1, 3, 3, 1 };
+            Console.WriteLine(removeElement2(nums, 3));
             //char[][] grid = new char[4][] { new char[3] { '1', '1', '1' }, new char[3] { '0', '1', '0' }, new char[3] { '1', '0', '0' }, new char[3] { '1', '0', '1' } };
             //char[][] grid = new char[4][] { new char[5] { '1', '1', '1', '1', '0' }, new char[5] { '1', '1', '0', '1', '0' }, new char[5] { '1', '1', '0', '0', '0' }, new char[5] { '0', '0', '0', '0', '0' } };
             //Console.WriteLine(NumIslands(grid, 3));
             Console.WriteLine("-----------------------------------------------------------");
+        }
+
+        public static int RemoveElement(int[] nums, int val)
+        {
+            //if (nums.Length == 0)
+            //{
+            //    return 0;
+            //}
+            //int L = 0, R = nums.Length - 1;
+            //while (L <= R)
+            //{
+            //    while (L < R && nums[R] == val)
+            //    {
+            //        R--;
+            //    }
+            //    if (L <= R && nums[L] == val)
+            //    {
+            //        nums[L] = nums[R];
+            //        R--;
+            //    }
+            //    L++;
+            //}
+            //return R + 1;
+
+            int L = 0, R = nums.Length;
+            while (L < R)
+            {
+                if (nums[L] == val)
+                {
+                    nums[L] = nums[R - 1];
+                    R--;
+                }
+                else
+                {
+                    L++;
+                }
+            }
+            return R;
+        }
+
+        public int removeElement1(int[] nums, int val)
+        {
+            int i = 0;
+            for (int j = 0; j < nums.Length; j++)
+            {
+                if (nums[j] != val)
+                {
+                    nums[i] = nums[j];
+                    i++;
+                }
+            }
+            return i;
+        }
+
+        public static int removeElement2(int[] nums, int val)
+        {
+            int i = 0;
+            int n = nums.Length;
+            while (i < n)
+            {
+                if (nums[i] == val)
+                {
+                    nums[i] = nums[n - 1];
+                    // reduce array size by one
+                    n--;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            return n;
         }
 
         public class ListNode
