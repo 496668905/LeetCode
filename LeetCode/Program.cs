@@ -33,8 +33,33 @@ namespace LeetCode
             //t3.Start();
             //Thread t2 = new Thread(() => foo.Second(B));
             //t2.Start();
-            Console.WriteLine(StrStr("hello","ll"));
+            Console.WriteLine(StrStr("hello", "ll"));
             //Console.WriteLine("-----------------------------------------------------------");
+        }
+
+        public class WordsFrequency
+        {
+            Dictionary<string, int> bookDic=new Dictionary<string, int>();
+            public WordsFrequency(string[] book)
+            {
+                foreach (var item in book)
+                {
+                    if (bookDic.ContainsKey(item))
+                    {
+                        bookDic[item]++;
+                    }
+                    else
+                    {
+                        bookDic.Add(item, 1);
+                    }
+                }
+            }
+
+            public int Get(string word)
+            {
+                bookDic.TryGetValue(word, out int value);
+                return value;
+            }
         }
 
         public static int StrStr(string haystack, string needle)
