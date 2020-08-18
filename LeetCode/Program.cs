@@ -23,20 +23,24 @@ namespace LeetCode
             //char[][] grid = new char[4][] { new char[3] { '1', '1', '1' }, new char[3] { '0', '1', '0' }, new char[3] { '1', '0', '0' }, new char[3] { '1', '0', '1' } };
             //char[][] grid = new char[4][] { new char[5] { '1', '1', '1', '1', '0' }, new char[5] { '1', '1', '0', '1', '0' }, new char[5] { '1', '1', '0', '0', '0' }, new char[5] { '0', '0', '0', '0', '0' } };
             //Console.WriteLine(NumIslands(grid, 3));
-            Foo foo = new Foo();
-            Action A = () => { Console.Write("first"); };
-            Action B = () => { Console.Write("second"); };
-            Action C = () => { Console.Write("third"); };
+            //Foo foo = new Foo();
+            //Action A = () => { Console.Write("first"); };
+            //Action B = () => { Console.Write("second"); };
+            //Action C = () => { Console.Write("third"); };
             //Thread t1 = new Thread(() => foo.First(A));
             //t1.Start();
             //Thread t3 = new Thread(() => foo.Third(C));
             //t3.Start();
             //Thread t2 = new Thread(() => foo.Second(B));
             //t2.Start();
-
+            Console.WriteLine(StrStr("hello","ll"));
             //Console.WriteLine("-----------------------------------------------------------");
         }
 
+        public static int StrStr(string haystack, string needle)
+        {
+            return haystack.IndexOf(needle);
+        }
         public class Foo
         {
             AutoResetEvent reset1 = new AutoResetEvent(false);
