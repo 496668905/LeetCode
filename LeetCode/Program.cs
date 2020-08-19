@@ -33,8 +33,55 @@ namespace LeetCode
             //t3.Start();
             //Thread t2 = new Thread(() => foo.Second(B));
             //t2.Start();
-            Console.WriteLine(StrStr("hello", "ll"));
+            //Console.WriteLine(StrStr("hello", "ll"));
             //Console.WriteLine("-----------------------------------------------------------");
+            var test = new FooBar(2);
+            Thread t1 = new Thread(() => test.Foo(() => { Console.Write("foo"); }));
+            Thread t2 = new Thread(() => test.Bar(() => { Console.Write("bar"); }));
+            t1.Start();
+            t2.Start();
+            Console.ReadKey();
+        }
+
+        public class FooBar
+        {
+            //AutoResetEvent reset1 = new AutoResetEvent(false);
+            //AutoResetEvent reset2 = new AutoResetEvent(false);
+            private SemaphoreSlim foo = new SemaphoreSlim(1);
+            private SemaphoreSlim bar = new SemaphoreSlim(0);
+            private int n;
+
+            public FooBar(int n)
+            {
+                this.n = n;
+            }
+
+            public void Foo(Action printFoo)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    //printFoo();
+                    //reset1.Set();
+                    //reset2.WaitOne();
+                    foo.Wait();
+                    printFoo();
+                    bar.Release();
+                }
+            }
+
+            public void Bar(Action printBar)
+            {
+
+                for (int i = 0; i < n; i++)
+                {
+                    //reset1.WaitOne();
+                    //printBar();
+                    //reset2.Set();
+                    bar.Wait();
+                    printBar();
+                    foo.Release();
+                }
+            }
         }
 
         public class WordsFrequency
