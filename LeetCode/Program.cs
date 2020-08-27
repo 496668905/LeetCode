@@ -48,7 +48,6 @@ namespace LeetCode
         public static int smallestDivisor(int[] nums, int threshold)
         {
             //nums = [1,2,5,9], threshold = 6
-
             int max = nums.Max();
             int left = 1, right = max;
             while (left < right)
