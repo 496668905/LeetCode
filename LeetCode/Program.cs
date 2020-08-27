@@ -33,8 +33,36 @@ namespace LeetCode
             //t3.Start();
             //Thread t2 = new Thread(() => foo.Second(B));
             //t2.Start();
+            int[] nums = { 1, 2, 5, 9 };int threshold = 6;
+            smallestDivisor(nums, threshold);
             Console.WriteLine(StrStr("hello", "ll"));
             //Console.WriteLine("-----------------------------------------------------------");
+        }
+
+        /// <summary>
+        /// 使结果不超过阈值的最小除数
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <param name="threshold"></param>
+        /// <returns></returns>
+        public static int smallestDivisor(int[] nums, int threshold)
+        {
+            //nums = [1,2,5,9], threshold = 6
+            int max = nums.Max();
+            int left = 1, right = max;
+            while (left < right)
+            {
+                int mid = (left + right) / 2, sum = 0;
+                foreach (var num in nums)
+                {
+                    sum += (num + mid - 1) / mid;
+                }
+                if (sum <= threshold)
+                    right = mid;
+                else
+                    left = mid + 1;
+            }
+            return right;
         }
 
         public class WordsFrequency
