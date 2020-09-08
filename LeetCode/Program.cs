@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace LeetCode
             //t3.Start();
             //Thread t2 = new Thread(() => foo.Second(B));
             //t2.Start();
-            int[] nums = { 1, 2, 5, 9 };int threshold = 6;
+            int[] nums = { 1, 2, 5, 9 }; int threshold = 6;
             smallestDivisor(nums, threshold);
             Console.WriteLine(StrStr("hello", "ll"));
             //Console.WriteLine("-----------------------------------------------------------");
@@ -52,8 +53,217 @@ namespace LeetCode
             //t2.Start();
             //Thread t3 = new Thread(() => h20.Hydrogen(C));
             //t3.Start();
+            //int[] nums1 = new int[] { 1, 2, 3, 0, 0, 0 };
+            //Merge(nums1, 3, new int[] { 2, 5, 6 }, 3);
+            //Console.WriteLine(SearchInsert(new int[] { 1, 3, 5, 6 }, 2));
+            //Console.WriteLine(Convert("LEFT", 2));
+            //Console.WriteLine(NumSquares(7));
+
+            LRUCache cache = new LRUCache(2 /* 缓存容量 */ );
+            cache.put(1, 1);
+            cache.put(2, 2);
+            cache.get(1);       // 返回  1
+            cache.put(3, 3);    // 该操作会使得密钥 2 作废
+            cache.get(2);       // 返回 -1 (未找到)
+            cache.put(4, 4);    // 该操作会使得密钥 1 作废
+            cache.get(1);       // 返回 -1 (未找到)
+            cache.get(3);       // 返回  3
+            cache.get(4);       // 返回  4
+
             Console.ReadKey();
         }
+
+        public class LRUCache
+        {
+            Dictionary<int, int> dic = new Dictionary<int, int>();
+            LinkedList<int> list = new LinkedList<int>();
+            //Hashtable hs = new Hashtable();
+            int _capacity;
+            public LRUCache(int capacity)
+            {
+
+                _capacity = capacity;
+            }
+
+            public int get(int key)
+            {
+                if (!dic.ContainsKey(key))
+                {
+                    return -1;
+                }
+                list.Remove(key);
+                list.AddLast(key);
+                return dic[key];
+            }
+
+            public void put(int key, int value)
+            {
+                if (dic.ContainsKey(key))
+                {
+                    dic[key] = value;
+                    list.Remove(key);
+                    list.AddLast(key);
+                    return;
+                }
+                if (_capacity == dic.Count)
+                {
+                    int removeKey = list.First.Value;
+                    list.Remove(removeKey);
+                    list.AddLast(key);
+                    dic.Remove(removeKey);
+                    dic.Add(key, value);
+                }
+                else
+                {
+                    dic.Add(key, value);
+                    list.AddLast(key);
+                }
+
+                //错误：只考虑个别用例，应先排除最先发生的情况，比如散列表有相同的键。
+                //if (_capacity <= dic.Count)
+                //{
+                //    if (!dic.ContainsKey(key))
+                //    {
+                //        int removeKey = list.First.Value;
+                //        list.Remove(removeKey);
+                //        dic.Remove(removeKey);
+                //        return;
+                //    }
+                //}
+                //if (dic.ContainsKey(key))
+                //{
+                //    dic[key] = value;
+                //}
+                //else
+                //{
+                //    dic.Add(key, value);
+                //}
+                //list.Remove(key);
+                //list.AddLast(key);
+            }
+        }
+
+        /// <summary>
+        /// 完全平方数
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static int NumSquares(int n)
+        {
+            List<int> square_nums = new List<int>();
+            for (int i = 1; i * i <= n; ++i)
+            {
+                square_nums.Add(i * i);
+            }
+
+            HashSet<int> queue = new HashSet<int>();
+            queue.Add(n);
+
+            int level = 0;
+            while (queue.Count() > 0)
+            {
+                level += 1;
+                HashSet<int> next_queue = new HashSet<int>();
+                foreach (int remainder in queue)
+                {
+                    foreach (int square in square_nums)
+                    {
+                        if (remainder.Equals(square))
+                        {
+                            return level;
+                        }
+                        else if (remainder < square)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            next_queue.Add(remainder - square);
+                        }
+                    }
+                }
+                queue = next_queue;
+            }
+            return level;
+        }
+
+        /// <summary>
+        /// Z 字形变换
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="numRows"></param>
+        /// <returns></returns>
+        public static string Convert(string s, int numRows)
+        {
+            if (numRows == 1)
+            {
+                return s;
+            }
+            List<StringBuilder> sbList = new List<StringBuilder>();
+            for (int i = 0; i < Math.Min(numRows, s.Length); i++)
+            {
+                sbList.Add(new StringBuilder());
+            }
+            int updown = -1;
+            int index = 0;
+            char[] ch = s.ToCharArray();
+            for (int i = 0; i < ch.Count(); i++)
+            {
+                sbList[index].Append(ch[i]);
+                if (index == 0 || index == sbList.Count - 1)
+                {
+                    updown = -updown;
+                }
+                index += updown;
+            }
+            return string.Join("", sbList.Select(a => a.ToString()));
+        }
+
+        public static int SearchInsert(int[] nums, int target)
+        {
+            int n = nums.Length;
+            int l = 0, r = n - 1;
+            while (l <= r)
+            {
+                int mid = (l + r) / 2;
+                if (nums[mid] < target)
+                    l = mid + 1;
+                else r = mid - 1;
+            }
+            return l;
+            //return nums.Append(target).OrderBy(a => a).Select((a, i) => new { index = i, target = a }).First(a => a.target == target).index;
+        }
+
+        /// <summary>
+        /// 合并两个有序数组
+        /// </summary>
+        /// <param name="nums1"></param>
+        /// <param name="m"></param>
+        /// <param name="nums2"></param>
+        /// <param name="n"></param>
+        public static void Merge(int[] nums1, int m, int[] nums2, int n)
+        {
+            int[] nums1_copy = new int[m];
+            Array.Copy(nums1, 0, nums1_copy, 0, m);
+            int p1 = 0;
+            int p2 = 0;
+            int p = 0;
+            while (p1 < m && p2 < n)
+            {
+                nums1[p++] = nums1_copy[p1] < nums2[p2] ? nums1_copy[p1++] : nums2[p2++];
+            }
+            if (p1 < m)
+            {
+                Array.Copy(nums1_copy, p1, nums1, p1 + p2, m + n - p1 - p2);
+            }
+            if (p2 < n)
+            {
+                Array.Copy(nums2, p2, nums1, p1 + p2, m + n - p1 - p2);
+            }
+
+        }
+
+
 
         public class H2O
         {
@@ -174,7 +384,11 @@ namespace LeetCode
         /// <returns></returns>
         public static int smallestDivisor(int[] nums, int threshold)
         {
-            //nums = [1,2,5,9], threshold = 6
+            //输入：nums = [1, 2, 5, 9], threshold = 6
+            //输出：5
+            //解释：如果除数为 1 ，我们可以得到和为 17 （1 + 2 + 5 + 9）。
+            //如果除数为 4 ，我们可以得到和为 7(1 + 1 + 2 + 3) 。如果除数为 5 ，和为 5(1 + 1 + 1 + 2)。
+
             int max = nums.Max();
             int left = 1, right = max;
             while (left < right)
@@ -194,7 +408,7 @@ namespace LeetCode
 
         public class WordsFrequency
         {
-            Dictionary<string, int> bookDic=new Dictionary<string, int>();
+            Dictionary<string, int> bookDic = new Dictionary<string, int>();
             public WordsFrequency(string[] book)
             {
                 foreach (var item in book)
