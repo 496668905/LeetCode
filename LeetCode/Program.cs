@@ -37,6 +37,133 @@ namespace LeetCode
             smallestDivisor(nums, threshold);
             Console.WriteLine(StrStr("hello", "ll"));
             //Console.WriteLine("-----------------------------------------------------------");
+            //var test = new FooBar(2);
+            //Thread t1 = new Thread(() => test.Foo(() => { Console.Write("foo"); }));
+            //Thread t2 = new Thread(() => test.Bar(() => { Console.Write("bar"); }));
+            //t1.Start();
+            //t2.Start();
+            //Action A = () => { Console.Write("H"); };
+            //Action B = () => { Console.Write("O"); };
+            //Action C = () => { Console.Write("H"); };
+            //var h20 = new H2O();
+            //Thread t1 = new Thread(() => h20.Hydrogen(A));
+            //t1.Start();
+            //Thread t2 = new Thread(() => h20.Oxygen(B));
+            //t2.Start();
+            //Thread t3 = new Thread(() => h20.Hydrogen(C));
+            //t3.Start();
+            Console.ReadKey();
+        }
+
+        public class H2O
+        {
+            private SemaphoreSlim SemaphoreH = new SemaphoreSlim(2, 2);
+            private SemaphoreSlim SemaphoreO = new SemaphoreSlim(0, 1);
+            public H2O()
+            {
+
+            }
+
+            public void Hydrogen(Action releaseHydrogen)
+            {
+                SemaphoreH.Wait();
+                // releaseHydrogen() outputs "H". Do not change or remove this line.
+                releaseHydrogen();
+                if (SemaphoreH.CurrentCount == 0)
+                {
+                    SemaphoreO.Release();
+                }
+
+            }
+            //HHO
+            public void Oxygen(Action releaseOxygen)
+            {
+                SemaphoreO.Wait();
+                // releaseOxygen() outputs "O". Do not change or remove this line.
+                releaseOxygen();
+                SemaphoreH.Release(2);
+            }
+        }
+
+        /// <summary>
+        /// 闭包（定义在函数内部的函数）
+        /// 调用函数内部局部变量的函数（编译器使T1生成类，匿名函数为成员函数）
+        /// 如果一个氧线程到达屏障时没有氢线程到达，它必须等候直到两个氢线程到达。
+        /// </summary>
+
+        public class Closer
+        {
+            public Func<int> T1()
+            {
+                var n = 99;
+                return () =>
+                {
+                    Console.WriteLine(n);
+                    return n;
+                };
+            }
+        }
+
+        public class TCloser1
+        {
+            public Func<int> T1()
+            {
+                var n = 10;
+                return () =>
+                {
+                    return n;
+                };
+            }
+
+            public Func<int> T4()
+            {
+                return () =>
+                {
+                    var n = 10;
+                    return n;
+                };
+            }
+        }
+
+        public class FooBar
+        {
+            //AutoResetEvent reset1 = new AutoResetEvent(false);
+            //AutoResetEvent reset2 = new AutoResetEvent(false);
+            private SemaphoreSlim foo = new SemaphoreSlim(1);
+            private SemaphoreSlim bar = new SemaphoreSlim(0);
+            private int n;
+
+            public FooBar(int n)
+            {
+                this.n = n;
+            }
+
+            public void Foo(Action printFoo)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    //printFoo();
+                    //reset1.Set();
+                    //reset2.WaitOne();
+                    foo.Wait();
+                    printFoo();
+                    bar.Release();
+                }
+            }
+
+            public void Bar(Action printBar)
+            {
+
+                for (int i = 0; i < n; i++)
+                {
+                    //reset1.WaitOne();
+                    //printBar();
+                    //reset2.Set();
+                    bar.Wait();
+                    printBar();
+                    foo.Release();
+                }
+            }
         }
 
         /// <summary>
