@@ -34,9 +34,9 @@ namespace LeetCode
             //t3.Start();
             //Thread t2 = new Thread(() => foo.Second(B));
             //t2.Start();
-            int[] nums = { 1, 2, 5, 9 }; int threshold = 6;
-            smallestDivisor(nums, threshold);
-            Console.WriteLine(StrStr("hello", "ll"));
+            //int[] nums = { 1, 2, 5, 9 }; int threshold = 6;
+            //smallestDivisor(nums, threshold);
+            //Console.WriteLine(StrStr("hello", "ll"));
             //Console.WriteLine("-----------------------------------------------------------");
             //var test = new FooBar(2);
             //Thread t1 = new Thread(() => test.Foo(() => { Console.Write("foo"); }));
@@ -59,18 +59,70 @@ namespace LeetCode
             //Console.WriteLine(Convert("LEFT", 2));
             //Console.WriteLine(NumSquares(7));
 
-            LRUCache cache = new LRUCache(2 /* 缓存容量 */ );
-            cache.put(1, 1);
-            cache.put(2, 2);
-            cache.get(1);       // 返回  1
-            cache.put(3, 3);    // 该操作会使得密钥 2 作废
-            cache.get(2);       // 返回 -1 (未找到)
-            cache.put(4, 4);    // 该操作会使得密钥 1 作废
-            cache.get(1);       // 返回 -1 (未找到)
-            cache.get(3);       // 返回  3
-            cache.get(4);       // 返回  4
-
+            //LRUCache cache = new LRUCache(2 /* 缓存容量 */ );
+            //cache.put(1, 1);
+            //cache.put(2, 2);
+            //cache.get(1);       // 返回  1
+            //cache.put(3, 3);    // 该操作会使得密钥 2 作废
+            //cache.get(2);       // 返回 -1 (未找到)
+            //cache.put(4, 4);    // 该操作会使得密钥 1 作废
+            //cache.get(1);       // 返回 -1 (未找到)
+            //cache.get(3);       // 返回  3
+            //cache.get(4);       // 返回  4
+            var aa = new int[][] { new int[] { 5,4}, new int[] { 6, 4 }, new int[] { 6, 7 },new int[] { 2, 3 } };
+            Console.WriteLine(MaxEnvelopes(aa));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 俄罗斯套娃信封问题
+        /// </summary>
+        /// <param name="envelopes"></param>
+        /// <returns></returns>
+        public static int MaxEnvelopes(int[][] envelopes)
+        {
+            // sort on increasing in first dimension and decreasing in second
+            Array.Sort(envelopes, new IntComparer());
+            int[] secondDim = new int[envelopes.Length];
+            for (int i = 0; i < envelopes.Length; ++i) secondDim[i] = envelopes[i][1];
+            return LengthOfLIS(secondDim);
+        
+       }
+
+        public static int LengthOfLIS(int[] nums)
+        {
+            int[] dp = new int[nums.Length];
+            int len = 0;
+            foreach (int num in nums)
+            {
+                int i = Array.BinarySearch(dp, 0, len, num);
+                if (i < 0)
+                {
+                    i = -(i + 1);
+                }
+                dp[i] = num;
+                if (i == len)
+                {
+                    len++;
+                }
+            }
+            return len;
+        }
+
+        public class IntComparer : IComparer<int[]>
+        {
+            public int Compare(int[] arr1, int[] arr2)
+            {
+                // 按宽度升序排列，如果宽度⼀样，则按⾼度降序排列，避免相同宽度的错误情况
+                if (arr1[0] == arr2[0])
+                {
+                    return arr2[1] - arr1[1];
+                }
+                else
+                {
+                    return arr1[0] - arr2[0];
+                }
+            }
         }
 
         public class LRUCache
