@@ -69,8 +69,9 @@ namespace LeetCode
             //cache.get(1);       // 返回 -1 (未找到)
             //cache.get(3);       // 返回  3
             //cache.get(4);       // 返回  4
-            var aa = new int[][] { new int[] { 5,4}, new int[] { 6, 4 }, new int[] { 6, 7 },new int[] { 2, 3 } };
-            Console.WriteLine(MaxEnvelopes(aa));
+            //var aa = new int[][] { new int[] { 5, 4 }, new int[] { 6, 4 }, new int[] { 6, 7 }, new int[] { 2, 3 } };
+            //Console.WriteLine(MaxEnvelopes(aa));
+            Console.WriteLine(LengthOfLIS(new int[] { 10, 9, 2, 5, 3, 7, 101, 18 }));
             Console.ReadKey();
         }
 
@@ -86,27 +87,69 @@ namespace LeetCode
             int[] secondDim = new int[envelopes.Length];
             for (int i = 0; i < envelopes.Length; ++i) secondDim[i] = envelopes[i][1];
             return LengthOfLIS(secondDim);
-        
-       }
 
+        }
+
+        /// <summary>
+        /// 最长上升子序列
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
         public static int LengthOfLIS(int[] nums)
         {
-            int[] dp = new int[nums.Length];
+            // O(n^2) dp
+
+            //int[] dp = new int[nums.Length];
+            //int len = 0;
+            //foreach (int num in nums)
+            //{
+            //    int i = Array.BinarySearch(dp, 0, len, num);
+            //    if (i < 0)
+            //    {
+            //        i = -(i + 1);
+            //    }
+            //    dp[i] = num;
+            //    if (i == len)
+            //    {
+            //        len++;
+            //    }
+            //}
+            //return len;
+            var res = new int[nums.Length];
             int len = 0;
+
             foreach (int num in nums)
             {
-                int i = Array.BinarySearch(dp, 0, len, num);
-                if (i < 0)
-                {
-                    i = -(i + 1);
-                }
-                dp[i] = num;
-                if (i == len)
-                {
-                    len++;
-                }
+                var index = Array.BinarySearch(res, 0, len, num);
+                index = index < 0 ? ~index : index;
+                res[index] = num;
+                len = index == len ? len + 1 : len;
             }
+
             return len;
+
+            // O(nlogn) binarySearch
+            if (nums.Length == 0)
+            {
+                return 0;
+            }
+            int[] dp = new int[nums.Length];
+            dp[0] = 1;
+            int maxans = 1;
+            for (int i = 1; i < dp.Length; i++)
+            {
+                int maxval = 0;
+                for (int j = 0; j < i; j++)
+                {
+                    if (nums[i] > nums[j])
+                    {
+                        maxval = Math.Max(maxval, dp[j]);
+                    }
+                }
+                dp[i] = maxval + 1;
+                maxans = Math.Max(maxans, dp[i]);
+            }
+            return maxans;
         }
 
         public class IntComparer : IComparer<int[]>
