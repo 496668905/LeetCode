@@ -144,12 +144,14 @@ namespace LeetCode
                     if (nums[i] > nums[j])
                     {
                         maxval = Math.Max(maxval, dp[j]);
+                        //dp[i] = Math.Max(dp[i], dp[j] + 1);
                     }
                 }
                 dp[i] = maxval + 1;
                 maxans = Math.Max(maxans, dp[i]);
             }
             return maxans;
+            //  return dp.Max();
         }
 
         public class IntComparer : IComparer<int[]>
