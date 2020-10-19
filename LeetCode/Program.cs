@@ -84,46 +84,132 @@ namespace LeetCode
         /// <returns></returns>
         public static bool BackspaceCompare(string S, string T)
         {
-            StringBuilder sbS = new StringBuilder(S);
-            StringBuilder sbT = new StringBuilder(T);
-            if (S.Contains("#"))
-            {
-                sbS = GetSb(sbS);
-            }
-            if (T.Contains("#"))
-            {
-                sbT = GetSb(sbT);
-            }
-            if (sbS.Equals(sbT))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+            //StringBuilder sbS = new StringBuilder(S);
+            //StringBuilder sbT = new StringBuilder(T);
+            //if (S.Contains("#"))
+            //{
+            //    sbS = GetSb(sbS);
+            //}
+            //if (T.Contains("#"))
+            //{
+            //    sbT = GetSb(sbT);
+            //}
+            //if (sbS.ToString().Equals(sbT.ToString()))
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
 
-        public static StringBuilder GetSb(StringBuilder str)
-        {
-            for (int i = 0; i < str.Length; i++)
+            //var stackS = GetSb(S);
+            //var stackT = GetSb(T);
+            //if (stackS.ToString().Equals(stackT.ToString()))
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
+
+            int i = S.Length - 1, j = T.Length - 1;
+            int skipS = 0, skipT = 0;
+
+            while (i >= 0 || j >= 0)
             {
-                if (str[i] == '#')
+                while (i >= 0)
                 {
-                    if (i == 0)
+                    if (S.ElementAt(i) == '#')
                     {
-                        str.Remove(0, 1);
-                        i -= 1;
+                        skipS++;
+                        i--;
+                    }
+                    else if (skipS > 0)
+                    {
+                        skipS--;
+                        i--;
                     }
                     else
                     {
-                        str.Remove(i - 1, 2);
-                        i -= 2;
+                        break;
                     }
                 }
+                while (j >= 0)
+                {
+                    if (T.ElementAt(j) == '#')
+                    {
+                        skipT++;
+                        j--;
+                    }
+                    else if (skipT > 0)
+                    {
+                        skipT--;
+                        j--;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if (i >= 0 && j >= 0)
+                {
+                    if (S.ElementAt(i) != T.ElementAt(j))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (i >= 0 || j >= 0)
+                    {
+                        return false;
+                    }
+                }
+                i--;
+                j--;
             }
-            return str;
+            return true;
         }
+
+        public static Stack<char> GetSb(string str)
+        {
+            var stack = new Stack<char>();
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] != '#')
+                {
+                    stack.Push(str[i]);
+                }
+                else if (stack.Count > 0)
+                {
+                    stack.Pop();
+                }
+            }
+            return stack;
+        }
+
+        //public static StringBuilder GetSb(StringBuilder str)
+        //{
+        //    for (int i = 0; i < str.Length; i++)
+        //    {
+        //        if (str[i] == '#')
+        //        {
+        //            if (i == 0)
+        //            {
+        //                str.Remove(0, 1);
+        //                i -= 1;
+        //            }
+        //            else
+        //            {
+        //                str.Remove(i - 1, 2);
+        //                i -= 2;
+        //            }
+        //        }
+        //    }
+        //    return str;
+        //}
 
         /// <summary>
         /// 俄罗斯套娃信封问题
