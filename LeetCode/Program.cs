@@ -71,8 +71,58 @@ namespace LeetCode
             //cache.get(4);       // 返回  4
             //var aa = new int[][] { new int[] { 5, 4 }, new int[] { 6, 4 }, new int[] { 6, 7 }, new int[] { 2, 3 } };
             //Console.WriteLine(MaxEnvelopes(aa));
-            Console.WriteLine(LengthOfLIS(new int[] { 10, 9, 2, 5, 3, 7, 101, 18 }));
+            //Console.WriteLine(LengthOfLIS(new int[] { 10, 9, 2, 5, 3, 7, 101, 18 }));
+            Console.WriteLine(BackspaceCompare("e##e#o##oyof##q", "e##e#fq##o##oyof##q"));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 比较含退格的字符串
+        /// </summary>
+        /// <param name="S"></param>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        public static bool BackspaceCompare(string S, string T)
+        {
+            StringBuilder sbS = new StringBuilder(S);
+            StringBuilder sbT = new StringBuilder(T);
+            if (S.Contains("#"))
+            {
+                sbS = GetSb(sbS);
+            }
+            if (T.Contains("#"))
+            {
+                sbT = GetSb(sbT);
+            }
+            if (sbS.Equals(sbT))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static StringBuilder GetSb(StringBuilder str)
+        {
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == '#')
+                {
+                    if (i == 0)
+                    {
+                        str.Remove(0, 1);
+                        i -= 1;
+                    }
+                    else
+                    {
+                        str.Remove(i - 1, 2);
+                        i -= 2;
+                    }
+                }
+            }
+            return str;
         }
 
         /// <summary>
