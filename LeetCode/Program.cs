@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,8 +74,100 @@ namespace LeetCode
             //var aa = new int[][] { new int[] { 5, 4 }, new int[] { 6, 4 }, new int[] { 6, 7 }, new int[] { 2, 3 } };
             //Console.WriteLine(MaxEnvelopes(aa));
             //Console.WriteLine(LengthOfLIS(new int[] { 10, 9, 2, 5, 3, 7, 101, 18 }));
-            Console.WriteLine(BackspaceCompare("e##e#o##oyof##q", "e##e#fq##o##oyof##q"));
+            //Console.WriteLine(BackspaceCompare("e##e#o##oyof##q", "e##e#fq##o##oyof##q"));
+            //给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
+            ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))) };
+            ReorderList(head);
+            Console.WriteLine();
             Console.ReadKey();
+        }
+
+        /// <summary>
+        ///  重排链表
+        /// </summary>
+        /// <param name="head"></param>
+        public static void ReorderList(ListNode head)
+        {
+            //if (head == null)
+            //{
+            //    return;
+            //}
+            //List<ListNode> list = new List<ListNode>();
+            //ListNode node = head;
+            //while (node != null)
+            //{
+            //    list.Add(node);
+            //    node = node.next;
+            //}
+            //int i = 0, j = list.Count() - 1;
+            //while (i < j)
+            //{
+            //    list.ElementAt(i).next = list.ElementAt(j);
+            //    i++;
+            //    if (i == j)
+            //    {
+            //        break;
+            //    }
+            //    list.ElementAt(j).next = list.ElementAt(i);
+            //    j--;
+            //}
+            //list.ElementAt(i).next = null;
+
+
+            if (head == null)
+            {
+                return;
+            }
+            ListNode mid = middleNode(head);
+            ListNode l1 = head;
+            ListNode l2 = mid.next;
+            mid.next = null;
+            l2 = reverseList(l2);
+            mergeList(l1, l2);
+
+        }
+
+        public static ListNode middleNode(ListNode head)
+        {
+            ListNode slow = head;
+            ListNode fast = head;
+            while (fast.next != null && fast.next.next != null)
+            {
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+            return slow;
+        }
+
+        public static ListNode reverseList(ListNode head)
+        {
+            ListNode prev = null;
+            ListNode curr = head;
+            while (curr != null)
+            {
+                ListNode nextTemp = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = nextTemp;
+            }
+            return prev;
+        }
+
+        public static void mergeList(ListNode l1, ListNode l2)
+        {
+            ListNode l1_tmp;
+            ListNode l2_tmp;
+            while (l1 != null && l2 != null)
+            {
+                l1_tmp = l1.next;
+                l2_tmp = l2.next;
+
+                l1.next = l2;
+                l1 = l1_tmp;
+
+                l2.next = l1;
+                l2 = l2_tmp;
+            }
         }
 
         /// <summary>
@@ -777,6 +871,11 @@ namespace LeetCode
             public int val;
             public ListNode next;
             public ListNode(int x) { val = x; }
+            public ListNode(int val = 0, ListNode next = null)
+            {
+                this.val = val;
+                this.next = next;
+            }
         }
         public static ListNode AddTwoNumbers(ListNode l1, ListNode l2)
         {
