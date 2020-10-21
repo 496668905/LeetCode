@@ -76,10 +76,38 @@ namespace LeetCode
             //Console.WriteLine(LengthOfLIS(new int[] { 10, 9, 2, 5, 3, 7, 101, 18 }));
             //Console.WriteLine(BackspaceCompare("e##e#o##oyof##q", "e##e#fq##o##oyof##q"));
             //给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
-            ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))) };
-            ReorderList(head);
-            Console.WriteLine();
+            //ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))) };
+            //ReorderList(head);
+            Console.WriteLine(IsLongPressedName("leelee", "lleeelee"));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 长按键入
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="typed"></param>
+        /// <returns></returns>
+        public static bool IsLongPressedName(string name, string typed)
+        {
+            int i = 0, j = 0;
+            while (j < typed.Length)
+            {
+                if (i < name.Length && name.ElementAt(i) == typed.ElementAt(j))
+                {
+                    i++;
+                    j++;
+                }
+                else if (j > 0 && name.ElementAt(j) == typed.ElementAt(j - 1))
+                {
+                    j++;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return i == name.Length;
         }
 
         /// <summary>
