@@ -78,8 +78,37 @@ namespace LeetCode
             //给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
             //ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))) };
             //ReorderList(head);
-            Console.WriteLine(IsLongPressedName("leelee", "lleeelee"));
+            //Console.WriteLine(IsLongPressedName("leelee", "lleeelee"));
+            Console.WriteLine(PartitionLabels("ababc").ToString());
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 划分字母区间
+        /// </summary>
+        /// <param name="S"></param>
+        /// <returns></returns>
+        public static IList<int> PartitionLabels(string S)
+        {
+            //使用“ last['b'] = 5”之类的映射来帮助您扩展分区的宽度
+            int[] last = new int[26];
+            int length = S.Length;
+            for (int i = 0; i < length; i++)
+            {
+                last[S.ElementAt(i) - 'a'] = i;
+            }
+            List<int> partition = new List<int>();
+            int start = 0, end = 0;
+            for (int i = 0; i < length; i++)
+            {
+                end = Math.Max(end, last[S.ElementAt(i) - 'a']);
+                if (i == end)
+                {
+                    partition.Add(end - start + 1);
+                    start = end + 1;
+                }
+            }
+            return partition;
         }
 
         /// <summary>
