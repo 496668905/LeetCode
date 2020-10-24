@@ -75,12 +75,64 @@ namespace LeetCode
             //Console.WriteLine(MaxEnvelopes(aa));
             //Console.WriteLine(LengthOfLIS(new int[] { 10, 9, 2, 5, 3, 7, 101, 18 }));
             //Console.WriteLine(BackspaceCompare("e##e#o##oyof##q", "e##e#fq##o##oyof##q"));
-            //给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
             //ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))) };
             //ReorderList(head);
             //Console.WriteLine(IsLongPressedName("leelee", "lleeelee"));
-            Console.WriteLine(PartitionLabels("ababc").ToString());
+            //Console.WriteLine(PartitionLabels("ababc").ToString());
+            ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(2, new ListNode(1)))) };
+            Console.WriteLine(IsPalindrome(head));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 回文链表
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+
+        public static bool IsPalindrome(ListNode head)
+        {
+            //12455421
+            //2 12 212
+            //1221
+            List<int> values = new List<int>();
+            while (head != null)
+            {
+                values.Add(head.val);
+                head = head.next;
+            }
+            int front = 0, end = values.Count - 1;
+            while (front < end)
+            {
+                if (values[front] != values[end])
+                {
+                    return false;
+                }
+                front++;
+                end++;
+            }
+            return true;
+            //frontPointer = head;
+            //return recursivelyCheck(head);
+        }
+
+        private static ListNode frontPointer;
+
+        private static bool recursivelyCheck(ListNode currentNode)
+        {
+            if (currentNode != null)
+            {
+                if (!recursivelyCheck(currentNode.next))
+                {
+                    return false;
+                }   
+                if (currentNode.val != frontPointer.val)
+                {
+                    return false;
+                }
+                frontPointer = frontPointer.next;
+            }
+            return true;
         }
 
         /// <summary>
@@ -145,42 +197,47 @@ namespace LeetCode
         /// <param name="head"></param>
         public static void ReorderList(ListNode head)
         {
-            //if (head == null)
-            //{
-            //    return;
-            //}
-            //List<ListNode> list = new List<ListNode>();
-            //ListNode node = head;
-            //while (node != null)
-            //{
-            //    list.Add(node);
-            //    node = node.next;
-            //}
-            //int i = 0, j = list.Count() - 1;
-            //while (i < j)
-            //{
-            //    list.ElementAt(i).next = list.ElementAt(j);
-            //    i++;
-            //    if (i == j)
-            //    {
-            //        break;
-            //    }
-            //    list.ElementAt(j).next = list.ElementAt(i);
-            //    j--;
-            //}
-            //list.ElementAt(i).next = null;
-
-
+            //给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3
+            //画图表示，链表指针移动，链表细节可以忽略。
+            //1   2   3   4   5
+            //15              52
+            //15  24      43  52
             if (head == null)
             {
                 return;
             }
-            ListNode mid = middleNode(head);
-            ListNode l1 = head;
-            ListNode l2 = mid.next;
-            mid.next = null;
-            l2 = reverseList(l2);
-            mergeList(l1, l2);
+            List<ListNode> list = new List<ListNode>();
+            ListNode node = head;
+            while (node != null)
+            {
+                list.Add(node);
+                node = node.next;
+            }
+            int i = 0, j = list.Count() - 1;
+            while (i < j)
+            {
+                list.ElementAt(i).next = list.ElementAt(j);
+                i++;
+                if (i == j)
+                {
+                    break;
+                }
+                list.ElementAt(j).next = list.ElementAt(i);
+                j--;
+            }
+            list.ElementAt(i).next = null;
+
+
+            //if (head == null)
+            //{
+            //    return;
+            //}
+            //ListNode mid = middleNode(head);
+            //ListNode l1 = head;
+            //ListNode l2 = mid.next;
+            //mid.next = null;
+            //l2 = reverseList(l2);
+            //mergeList(l1, l2);
 
         }
 
