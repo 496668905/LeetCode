@@ -79,9 +79,137 @@ namespace LeetCode
             //ReorderList(head);
             //Console.WriteLine(IsLongPressedName("leelee", "lleeelee"));
             //Console.WriteLine(PartitionLabels("ababc").ToString());
-            ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(2, new ListNode(1)))) };
-            Console.WriteLine(IsPalindrome(head));
+            //ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(2, new ListNode(1)))) };
+            //Console.WriteLine(IsPalindrome(head));
+            //var clips = new int[][] { new int []{ 0, 2 }, new int[] { 4, 6}, new int[] { 8, 10},
+            //new int[] { 1, 9}, new int[] { 1, 5}, new int[] { 5, 9}};
+            //Console.WriteLine(VideoStitching(clips,10));
+            //Console.WriteLine(LongestMountain(new int[] { 2, 1, 4, 7, 3, 2, 5 }));
+            Console.WriteLine(LongestMountain(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 数组中的最长山脉
+        /// </summary>
+        /// <param name="A"></param>
+        /// <returns></returns>
+        public static int LongestMountain(int[] A)
+        {
+            //[2,1,4,7,3,2,5] 
+            //[1,4,7,3,2]
+            //5
+            int uphill = 0, downhill = 0;
+            int last = 0;
+            int max = 0;
+            if (A.Length < 3) return 0;
+            for (int i = 1; i < A.Length; i++)
+            {
+                if (A[i] > A[i - 1])
+                {
+                    if (downhill == 1 || uphill == 0)
+                    {
+                        downhill = 0;
+                        last = i - 1;
+                    }
+                    uphill = 1;
+                }
+                if (A[i] == A[i - 1])
+                {
+                    uphill = 0;
+                    downhill = 0;
+                }
+                if (A[i] < A[i - 1]) downhill = 1;
+                if (uphill == 1 && downhill == 1)
+                {
+                    if (max < i - last + 1)
+                    {
+                        max = i - last + 1;
+                    }
+                }
+            }
+            return max;
+
+            //int n = A.Length;
+            //int ans = 0;
+            //int left = 0;
+            //while (left + 2 < n)
+            //{
+            //    int right = left + 1;
+            //    if (A[left] < A[left + 1])
+            //    {
+            //        while (right + 1 < n && A[right] < A[right + 1])
+            //        {
+            //            ++right;
+            //        }
+            //        if (right < n - 1 && A[right] > A[right + 1])
+            //        {
+            //            while (right + 1 < n && A[right] > A[right + 1])
+            //            {
+            //                ++right;
+            //            }
+            //            ans = Math.Max(ans, right - left + 1);
+            //        }
+            //        else
+            //        {
+            //            ++right;
+            //        }
+            //    }
+            //    left = right;
+            //}
+            //return ans;
+        }
+
+        /// <summary>
+        /// 视频拼接
+        /// </summary>
+        /// <param name="clips"></param>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        public static int VideoStitching(int[][] clips, int T)
+        {
+            // [[0,2],[4,6],[8,10],[1,9],[1,5],[5,9]], T = 10
+            //[0,2], [8,10], [1,9] 
+
+            int[] dp = new int[T + 1];
+            Array.Fill(dp, int.MaxValue - 1);
+            dp[0] = 0;
+            for (int i = 1; i <= T; i++)
+            {
+                foreach (var clip in clips)
+                {
+                    if (clip[0] < i && i <= clip[1])
+                    {
+                        dp[i] = Math.Min(dp[i], dp[clip[0]] + 1);
+                    }
+                }
+            }
+            return dp[T] == int.MaxValue - 1 ? -1 : dp[T];
+
+
+            //int[] maxn = new int[T];
+            //int last = 0, ret = 0, pre = 0;
+            //foreach (var clip in clips)
+            //{
+            //    if (clip[0] < T)
+            //    {
+            //        maxn[clip[0]] = Math.Max(maxn[clip[0]], clip[1]);
+            //    }
+            //}
+            //for (int i = 0; i < T; i++)
+            //{
+            //    last = Math.Max(last, maxn[i]);
+            //    if (i == last)
+            //    {
+            //        return -1;
+            //    }
+            //    if (i == pre)
+            //    {
+            //        ret++;
+            //        pre = last;
+            //    }
+            //}
+            //return ret;
         }
 
         /// <summary>
@@ -89,7 +217,6 @@ namespace LeetCode
         /// </summary>
         /// <param name="head"></param>
         /// <returns></returns>
-
         public static bool IsPalindrome(ListNode head)
         {
             //12455421
@@ -125,7 +252,7 @@ namespace LeetCode
                 if (!recursivelyCheck(currentNode.next))
                 {
                     return false;
-                }   
+                }
                 if (currentNode.val != frontPointer.val)
                 {
                     return false;
