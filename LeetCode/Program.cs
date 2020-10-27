@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,9 +86,83 @@ namespace LeetCode
             //new int[] { 1, 9}, new int[] { 1, 5}, new int[] { 5, 9}};
             //Console.WriteLine(VideoStitching(clips,10));
             //Console.WriteLine(LongestMountain(new int[] { 2, 1, 4, 7, 3, 2, 5 }));
-            Console.WriteLine(LongestMountain(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+            //Console.WriteLine(LongestMountain(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+            //Console.WriteLine(SmallerNumbersThanCurrent(new int[] { 8, 1, 2, 2, 3 }));
+            Console.WriteLine(PreorderTraversal(new TreeNode(1, null, new TreeNode(2, new TreeNode(3)))));
             Console.ReadKey();
         }
+
+        static IList<int> values = new List<int>();
+        public static IList<int> PreorderTraversal(TreeNode root)
+        {
+            //if (root != null)
+            //{
+            //    values.Add(root.val);
+            //    PreorderTraversal(root.left);
+            //    PreorderTraversal(root.right);
+            //}
+            //return values;
+
+            IList<int> res = new List<int>();
+            if (root == null)
+            {
+                return res;
+            }
+            Stack<TreeNode> stack = new Stack<TreeNode>();
+            TreeNode node = root;
+            while (stack.Count > 0 || node != null)
+            {
+                while (node != null)
+                {
+                    res.Add(node.val);
+                    stack.Push(node);
+                    node = node.left;
+                }
+                node = stack.Pop();
+                node = node.right;
+            }
+            return res;
+        }
+
+        public class TreeNode
+        {
+            public int val;
+            public TreeNode left;
+            public TreeNode right;
+            public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
+            {
+                this.val = val;
+                this.left = left;
+                this.right = right;
+            }
+        }
+
+        /// <summary>
+        /// 有多少小于当前数字的数字
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static int[] SmallerNumbersThanCurrent(int[] nums)
+        {
+            //计数排序等八大排序
+            int[] cnt = new int[101];
+            int n = nums.Length;
+            for (int i = 0; i < n; i++)
+            {
+                cnt[nums[i]]++;
+            }
+            for (int i = 1; i <= 100; i++)
+            {
+                cnt[i] += cnt[i - 1];
+            }
+            int[] ret = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                ret[i] = nums[i] == 0 ? 0 : cnt[nums[i] - 1];
+            }
+            return ret;
+        }
+
 
         /// <summary>
         /// 数组中的最长山脉
