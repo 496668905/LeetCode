@@ -92,6 +92,34 @@ namespace LeetCode
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// 独一无二的出现次数
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <returns></returns>
+        public static bool UniqueOccurrences(int[] arr)
+        {
+            Dictionary<int, int> occur = new Dictionary<int, int>();
+            foreach (var item in arr)
+            {
+                if (occur.ContainsKey(item))
+                {
+                    occur[item]++;
+                }
+                else
+                {
+                    occur.Add(item, 1);
+                }
+            }
+            //return occur.Values.Distinct().Count() == occur.Count;
+            HashSet<int> times = new HashSet<int>();
+            foreach (var item in occur)
+            {
+                times.Add(item.Value);
+            }
+            return times.Count() == occur.Count;
+        }
+
         static IList<int> values = new List<int>();
         public static IList<int> PreorderTraversal(TreeNode root)
         {
