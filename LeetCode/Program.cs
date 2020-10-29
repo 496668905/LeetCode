@@ -88,8 +88,69 @@ namespace LeetCode
             //Console.WriteLine(LongestMountain(new int[] { 2, 1, 4, 7, 3, 2, 5 }));
             //Console.WriteLine(LongestMountain(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
             //Console.WriteLine(SmallerNumbersThanCurrent(new int[] { 8, 1, 2, 2, 3 }));
-            Console.WriteLine(PreorderTraversal(new TreeNode(1, null, new TreeNode(2, new TreeNode(3)))));
+            //Console.WriteLine(PreorderTraversal(new TreeNode(1, null, new TreeNode(2, new TreeNode(3)))));
+            Console.WriteLine(SumNumbers(new TreeNode(1, new TreeNode(2, new TreeNode(4)), new TreeNode(3))));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 求根到叶子节点数字之和
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public static int SumNumbers(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            int sum = 0;
+            Queue<TreeNode> nodeQueue = new Queue<TreeNode>();
+            Queue<int> numQueue = new Queue<int>();
+            nodeQueue.Enqueue(root);
+            numQueue.Enqueue(root.val);
+            while (nodeQueue.Count > 0)
+            {
+                TreeNode node = nodeQueue.Dequeue();
+                int num = numQueue.Dequeue();
+                TreeNode left = node.left, right = node.right;
+                if (left == null && right == null)
+                {
+                    sum += num;
+                }
+                else
+                {
+                    if (left != null)
+                    {
+                        nodeQueue.Enqueue(left);
+                        numQueue.Enqueue(num * 10 + left.val);
+                    }
+                    if (right != null)
+                    {
+                        nodeQueue.Enqueue(right);
+                        numQueue.Enqueue(num * 10 + right.val);
+                    }
+                }
+            }
+            return sum;
+            //return DFS(root, 0);
+        }
+
+        public static int DFS(TreeNode root, int prevSum)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            int sum = prevSum * 10 + root.val;
+            if (root.left == null && root.right == null)
+            {
+                return sum;
+            }
+            else
+            {
+                return DFS(root.left, sum) + DFS(root.right, sum);
+            }
         }
 
         /// <summary>
