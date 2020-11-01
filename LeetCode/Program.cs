@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,15 +91,189 @@ namespace LeetCode
             //Console.WriteLine(SmallerNumbersThanCurrent(new int[] { 8, 1, 2, 2, 3 }));
             //Console.WriteLine(PreorderTraversal(new TreeNode(1, null, new TreeNode(2, new TreeNode(3)))));
             //Console.WriteLine(SumNumbers(new TreeNode(1, new TreeNode(2, new TreeNode(4)), new TreeNode(3))));
-            Console.WriteLine(IslandPerimeter(new int[][] {
-                new int[] { 0,1,0,0 },
-                new int[] { 1,1,1,0 },
-                new int[] { 0,1,0,0 },
-                new int[] { 1,1,0,0 },
-            }));
+            //Console.WriteLine(IslandPerimeter(new int[][] {
+            //    new int[] { 0,1,0,0 },
+            //    new int[] { 1,1,1,0 },
+            //    new int[] { 0,1,0,0 },
+            //    new int[] { 1,1,0,0 },
+            //}));
+
+            /**
+            // 初始化一个空的集合。
+            RandomizedCollection collection = new RandomizedCollection();
+
+            // 向集合中插入 1 。返回 true 表示集合不包含 1 。
+            collection.Insert(1);
+
+            // 向集合中插入另一个 1 。返回 false 表示集合包含 1 。集合现在包含 [1,1] 。
+            collection.Insert(1);
+
+            // 向集合中插入 2 ，返回 true 。集合现在包含 [1,1,2] 。
+            collection.Insert(2);
+
+            // getRandom 应当有 2/3 的概率返回 1 ，1/3 的概率返回 2 。
+            collection.GetRandom();
+
+            // 从集合中删除 1 ，返回 true 。集合现在包含 [1,2] 。
+            collection.Remove(1);
+
+            // getRandom 应有相同概率返回 1 和 2 。
+            collection.GetRandom();
+            */
+            var result = WordBreak("catsanddog", new string[5] { "cat", "cats", "and", "sand", "dog" }.ToList());
+            Console.WriteLine();
+
             Console.ReadKey();
         }
 
+        public static IList<string> WordBreak(string s, IList<string> wordDict)
+        {
+            return Partition(s, 0, wordDict);
+        }
+
+        private static IDictionary<int, IList<string>> _cache = new Dictionary<int, IList<string>>();
+
+        /// <summary>
+        /// 切分子字符串
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="start">子字符串起始位置</param>
+        private static IList<string> Partition(string s, int start, IList<string> wordDict)
+        {
+            if (_cache.ContainsKey(start)) return _cache[start];
+
+            var results = new List<string>();
+            //字符串末尾是唯一出口，祖先节点已经切分好的前缀即为此分支的唯一结果
+            if (start == s.Length) results.Add(null);
+
+            string sub;
+            //对字符串截前1字符、前2字符...前n字符，为此字符串的子节点
+            for (int i = start; i < s.Length; i++)
+            {
+                sub = s.Substring(start, i - start + 1);
+                if (wordDict.Contains(sub))
+                {
+                    foreach (var x in Partition(s, i + 1, wordDict))
+                    {
+                        results.Add(sub + (x == null ? "" : " " + x));
+                    }
+                }
+                //若截取的不在字典，则此分支剪断
+            }
+            _cache.Add(start, results);
+            return results;
+        }
+
+        public class RandomizedCollection1
+        {
+            List<int> list = new List<int>();
+            IDictionary<int, int> maps = new Dictionary<int, int>();
+            Random rd = new Random();
+            /** Initialize your data structure here. */
+            public RandomizedCollection1()
+            {
+
+            }
+
+            /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
+            public bool Insert(int val)
+            {
+                bool isExists = maps.ContainsKey(val);
+                if (!isExists)
+                    maps.Add(val, 0);
+                list.Add(val);
+                maps[val]++;
+                return isExists;
+
+            }
+
+            /** Removes a value from the collection. Returns true if the collection contained the specified element. */
+            public bool Remove(int val)
+            {
+                if (!maps.ContainsKey(val)) return false;
+
+                list.Remove(val);
+                maps[val]--;
+                if (maps[val] == 0)
+                    maps.Remove(val);
+                return true;
+            }
+
+            /** Get a random element from the collection. */
+            public int GetRandom()
+            {
+                int index = rd.Next(0, list.Count);
+                return list[index];
+            }
+        }
+
+        public class RandomizedCollection
+        {
+            // 字典内使用 HashSet 是为了实现 O(1) 删除索引，而且索引不会重复
+            Dictionary<int, HashSet<int>> IndexDictionary { get; set; } = new Dictionary<int, HashSet<int>>();
+            List<int> Values { get; set; } = new List<int>();
+
+            /** Initialize your data structure here. */
+            public RandomizedCollection()
+            {
+                /* 列表随机插入是 0(n)，因为要后移插入位置之后的元素，但追加在列表尾部是O(1)
+                 * 列表按索引查找是 O(1)，按值查找是 O(n)
+                 */
+
+            }
+
+            /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
+            public bool Insert(int val)
+            {
+                // 使用一个字典维护某个数字的所有索引列表
+                if (!IndexDictionary.TryGetValue(val, out var indexSet))
+                {
+                    indexSet = new HashSet<int>();
+                    IndexDictionary.Add(val, indexSet);
+                }
+
+                Values.Add(val);
+                indexSet.Add(Values.Count - 1);
+                return true;
+            }
+
+            /** Removes a value from the collection. Returns true if the collection contained the specified element. */
+            public bool Remove(int val)
+            {
+                // 字典不存在某个数字的索引，也就不存在某个数字
+                if (!IndexDictionary.TryGetValue(val, out var valIndexList) ||
+                    valIndexList.Count == 0)
+                    return false;
+
+                var lastValue = Values.Last();
+                if (lastValue == val)
+                {
+                    // 直接在列表最后移除
+                    valIndexList.Remove(Values.Count - 1);
+                    Values.RemoveAt(Values.Count - 1);
+                    return true;
+                }
+
+                // 将Values最后一个元素的值替换要删除的元素的最后一个索引的位置，然后Values删除最后一个元素，即为0(1)删除
+                // 被替换的值的索引列表应该移除其索引值（Values的长度-1），并追加一个被删除元素所在的索引值（因为被替换的值被替换到这个索引了）
+                var valLastIndex = valIndexList.Last();
+                var exchangeIndexList = IndexDictionary[lastValue];
+
+                valIndexList.Remove(valLastIndex);
+                exchangeIndexList.Remove(Values.Count - 1);
+                exchangeIndexList.Add(valLastIndex);
+
+                Values[valLastIndex] = lastValue;
+                Values.RemoveAt(Values.Count - 1);
+                return true;
+            }
+
+            /** Get a random element from the collection. */
+            public int GetRandom()
+            {
+                return Values[new Random().Next(0, Values.Count)];
+            }
+        }
 
         static int[] dx = { 0, 1, 0, -1 };
         static int[] dy = { 1, 0, -1, 0 };
