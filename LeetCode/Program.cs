@@ -126,6 +126,11 @@ namespace LeetCode
             Console.ReadKey();
         }
 
+        public static int[] Intersection(int[] nums1, int[] nums2)
+        {
+            return nums1.Intersect(nums2).ToArray();
+        }
+
         public static IList<string> WordBreak(string s, IList<string> wordDict)
         {
             return Partition(s, 0, wordDict);
