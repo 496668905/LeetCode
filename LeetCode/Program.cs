@@ -120,10 +120,81 @@ namespace LeetCode
             // getRandom 应有相同概率返回 1 和 2 。
             collection.GetRandom();
             */
-            var result = WordBreak("catsanddog", new string[5] { "cat", "cats", "and", "sand", "dog" }.ToList());
-            Console.WriteLine();
-
+            //var result = WordBreak("catsanddog", new string[5] { "cat", "cats", "and", "sand", "dog" }.ToList());
+            //Console.WriteLine(ValidMountainArray(new int[] { 0, 2, 3, 4, 5, 2, 1, 0 }));
+            Console.WriteLine(Insert(new int[][] { new int[] { 1, 3 }, new int[] { 6, 9 } }, new int[] { 2, 5 }));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 插入区间  
+        /// </summary>
+        /// <param name="intervals"></param>
+        /// <param name="newInterval"></param>
+        /// <returns></returns>
+        public static int[][] Insert(int[][] intervals, int[] newInterval)
+        {
+            int left = newInterval[0];
+            int right = newInterval[1];
+            bool placed = false;
+            List<int[]> ansList = new List<int[]>();
+            foreach (var item in intervals)
+            {
+                if (item[0] > right)
+                {
+                    if (!placed)
+                    {
+                        ansList.Add(new int[] { left, right });
+                        placed = true;
+                    }
+                    ansList.Add(item);
+                }
+                else if (item[1] < left)
+                {
+                    ansList.Add(item);
+                }
+                else
+                {
+                    left = Math.Min(left, item[0]);
+                    right = Math.Max(right, item[1]);
+                }
+            }
+            if (!placed)
+            {
+                ansList.Add(new int[] { left, right });
+            }
+            return ansList.ToArray();
+        }
+
+        /// <summary>
+        /// 有效的山脉数组
+        /// </summary>
+        /// <param name="A"></param>
+        /// <returns></returns>
+        public static bool ValidMountainArray(int[] A)
+        {
+            int N = A.Length;
+            int i = 0;
+
+            // 递增扫描
+            while (i + 1 < N && A[i] < A[i + 1])
+            {
+                i++;
+            }
+
+            // 最高点不能是数组的第一个位置或最后一个位置
+            if (i == 0 || i == N - 1)
+            {
+                return false;
+            }
+
+            // 递减扫描
+            while (i + 1 < N && A[i] > A[i + 1])
+            {
+                i++;
+            }
+
+            return i == N - 1;
         }
 
         public static int[] Intersection(int[] nums1, int[] nums2)
