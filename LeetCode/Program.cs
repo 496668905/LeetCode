@@ -122,8 +122,139 @@ namespace LeetCode
             */
             //var result = WordBreak("catsanddog", new string[5] { "cat", "cats", "and", "sand", "dog" }.ToList());
             //Console.WriteLine(ValidMountainArray(new int[] { 0, 2, 3, 4, 5, 2, 1, 0 }));
-            Console.WriteLine(Insert(new int[][] { new int[] { 1, 3 }, new int[] { 6, 9 } }, new int[] { 2, 5 }));
+            //Console.WriteLine(Insert(new int[][] { new int[] { 1, 3 }, new int[] { 6, 9 } }, new int[] { 2, 5 }));
+            Console.WriteLine(LadderLength("hit", "cog", new List<string> { "hot", "dot", "dog", "lot", "log", "cog" }));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 单词接龙
+        /// </summary>
+        /// <param name="beginWord"></param>
+        /// <param name="endWord"></param>
+        /// <param name="wordList"></param>
+        /// <returns></returns>
+        public static int LadderLength(string beginWord, string endWord, List<string> wordList)
+        {
+            // 第 1 步：先将 wordList 放到哈希表里，便于判断某个单词是否在 wordList 里
+            HashSet<string> wordSet = new HashSet<string>(wordList);
+            if (wordSet.Count == 0 || !wordSet.Contains(endWord))
+            {
+                return 0;
+            }
+            wordSet.Remove(beginWord);
+
+            // 第 2 步：图的广度优先遍历，必须使用队列和表示是否访问过的 visited 哈希表
+            Queue<string> queue = new Queue<string>();
+            queue.Enqueue(beginWord);
+            HashSet<string> visited = new HashSet<string>();
+            visited.Add(beginWord);
+
+            // 第 3 步：开始广度优先遍历，包含起点，因此初始化的时候步数为 1
+            int step = 1;
+            while (queue.Count > 0)
+            {
+                int currentSize = queue.Count;
+                for (int i = 0; i < currentSize; i++)
+                {
+                    // 依次遍历当前队列中的单词
+                    string currentWord = queue.Dequeue();
+                    // 如果 currentWord 能够修改 1 个字符与 endWord 相同，则返回 step + 1
+                    if (ChangeWordEveryOneLetter(currentWord, endWord, queue, visited, wordSet))
+                    {
+                        return step + 1;
+                    }
+                }
+                step++;
+            }
+            return 0;
+
+
+            //if (!wordList.Contains(endWord) || beginWord == endWord)
+            //    return 0;
+            //List<string> words = new List<string>(wordList);
+            //int reuslt = 1;
+            //int startIndex = 0;
+
+            //Queue wordQ = new Queue();
+            //wordQ.Enqueue(beginWord);
+            //while (wordQ.Count > 0)
+            //{
+            //    Queue tempQ = new Queue();
+            //    reuslt++;
+            //    while (wordQ.Count > 0)
+            //    {
+            //        string value = (string)wordQ.Dequeue();
+            //        for (int k = startIndex; k < words.Count; k++)
+            //        {
+            //            if (words[k].Length != value.Length)
+            //                continue;
+            //            int count = 0;
+            //            for (int i = 0; i < words[k].Length; i++)
+            //            {
+            //                if (words[k][i] != value[i])
+            //                    count++;
+            //                if (count > 1)
+            //                    break;
+            //            }
+            //            if (count == 1)
+            //            {
+            //                if (words[k] == endWord)
+            //                    return reuslt;
+            //                tempQ.Enqueue(words[k]);
+            //                words[k] = words[startIndex++];
+            //            }
+            //        }
+            //    }
+            //    wordQ = tempQ;
+            //}
+            //return 0;
+        }
+
+        /**
+         * 尝试对 currentWord 修改每一个字符，看看是不是能与 endWord 匹配
+         *
+         * @param currentWord
+         * @param endWord
+         * @param queue
+         * @param visited
+         * @param wordSet
+         * @return
+         */
+        private static bool ChangeWordEveryOneLetter(string currentWord, string endWord,
+                                                 Queue<string> queue, HashSet<string> visited, HashSet<string> wordSet)
+        {
+            char[] charArray = currentWord.ToCharArray();
+            for (int i = 0; i < endWord.Length; i++)
+            {
+                // 先保存，然后恢复
+                char originChar = charArray[i];
+                for (char k = 'a'; k <= 'z'; k++)
+                {
+                    if (k == originChar)
+                    {
+                        continue;
+                    }
+                    charArray[i] = k;
+                    string nextWord = string.Join("", charArray);
+                    if (wordSet.Contains(nextWord))
+                    {
+                        if (nextWord.Equals(endWord))
+                        {
+                            return true;
+                        }
+                        if (!visited.Contains(nextWord))
+                        {
+                            queue.Enqueue(nextWord);
+                            // 注意：添加到队列以后，必须马上标记为已经访问
+                            visited.Add(nextWord);
+                        }
+                    }
+                }
+                // 恢复
+                charArray[i] = originChar;
+            }
+            return false;
         }
 
         /// <summary>
