@@ -123,8 +123,50 @@ namespace LeetCode
             //var result = WordBreak("catsanddog", new string[5] { "cat", "cats", "and", "sand", "dog" }.ToList());
             //Console.WriteLine(ValidMountainArray(new int[] { 0, 2, 3, 4, 5, 2, 1, 0 }));
             //Console.WriteLine(Insert(new int[][] { new int[] { 1, 3 }, new int[] { 6, 9 } }, new int[] { 2, 5 }));
-            Console.WriteLine(LadderLength("hit", "cog", new List<string> { "hot", "dot", "dog", "lot", "log", "cog" }));
+            //Console.WriteLine(LadderLength("hit", "cog", new List<string> { "hot", "dot", "dog", "lot", "log", "cog" }));
+            Console.WriteLine(SortByBits(new int[] { 2, 3, 5, 7, 11, 13, 17, 19 }));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 根据数字二进制下 1 的数目排序
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <returns></returns>
+        public static int[] SortByBits(int[] arr)
+        {
+            //var v = from a in arr
+            //        orderby System.Convert.ToString(a, 2).Count(x => x == '1')
+            //        group a by System.Convert.ToString(a, 2).Count(x => x == '1') into g
+            //        select g.OrderBy(x => x);
+            //return v.SelectMany(x => x).ToArray();
+
+            //var list = arr.Select(a => new { a, b = System.Convert.ToString(a, 2).Replace("0", "").Length }).OrderBy(g => g.b).ThenBy(g => g.a);
+            //return list.Select(a => a.a).ToArray();
+
+            int[] newArr = new int[arr.Length];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                newArr[i] = HammingWeight((uint)arr[i]) * 100000 + arr[i];
+            }
+            Array.Sort(newArr);
+            for (int i = 0; i < newArr.Length; i++)
+            {
+                newArr[i] = newArr[i] % 100000;
+            }
+            return newArr;
+
+        }
+
+        public static int HammingWeight(uint n)
+        {
+            int result = 0;
+            while (n != 0)
+            {
+                n = n & (n - 1);
+                result++;
+            }
+            return result;
         }
 
         /// <summary>
