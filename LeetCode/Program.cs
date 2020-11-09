@@ -125,8 +125,37 @@ namespace LeetCode
             //Console.WriteLine(Insert(new int[][] { new int[] { 1, 3 }, new int[] { 6, 9 } }, new int[] { 2, 5 }));
             //Console.WriteLine(LadderLength("hit", "cog", new List<string> { "hot", "dot", "dog", "lot", "log", "cog" }));
             //Console.WriteLine(SortByBits(new int[] { 2, 3, 5, 7, 11, 13, 17, 19 }));
-            Console.WriteLine(CountRangeSum(new int[] { -2, 5, -1 }, -2, 2));
+            //Console.WriteLine(CountRangeSum(new int[] { -2, 5, -1 }, -2, 2));
+
+            var aa=KClosest(new int[][] { new int[] { 1, 3 }, new int[] { -2, 2 } },1);
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 最接近原点的 K 个点
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="K"></param>
+        /// <returns></returns>
+        public static int[][] KClosest(int[][] points, int K)
+        {
+            Array.Sort(points, new IntArryComparer());
+            int[][] result = new int[K][];
+            Array.Copy(points, result, K);
+            return result;
+
+            //Array.Sort<int[]>(points, (x, y) => (x[0] * x[0] + x[1] * x[1]).CompareTo(y[0] * y[0] + y[1] * y[1]));
+            //int[][] result = new int[K][];
+            //Array.Copy(points, result, K);
+            //return result;
+        }
+
+        public class IntArryComparer : IComparer<int[]>
+        {
+            public int Compare(int[] point1, int[] point2)
+            {
+                return (point1[0] * point1[0] + point1[1] * point1[1]) - (point2[0] * point2[0] + point2[1] * point2[1]);
+            }
         }
 
         /// <summary>
