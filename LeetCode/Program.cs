@@ -126,9 +126,93 @@ namespace LeetCode
             //Console.WriteLine(LadderLength("hit", "cog", new List<string> { "hot", "dot", "dog", "lot", "log", "cog" }));
             //Console.WriteLine(SortByBits(new int[] { 2, 3, 5, 7, 11, 13, 17, 19 }));
             //Console.WriteLine(CountRangeSum(new int[] { -2, 5, -1 }, -2, 2));
-
-            var aa=KClosest(new int[][] { new int[] { 1, 3 }, new int[] { -2, 2 } },1);
+            //var aa=KClosest(new int[][] { new int[] { 1, 3 }, new int[] { -2, 2 } },1);
+            Console.WriteLine(FindRotateSteps("godding", "gd"));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 自由之路
+        /// </summary>
+        /// <param name="ring"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static int FindRotateSteps(string ring, string key)
+        {
+            //Hashtable ht = new Hashtable();
+            //for (int i = 0; i < ring.Length; i++)
+            //{
+            //    if (ht.ContainsKey(ring[i]))
+            //    {
+            //        ((List<int>)ht[ring[i]]).Add(i);
+            //    }
+            //    else
+            //    {
+            //        List<int> list = new List<int>();
+            //        list.Add(i);
+            //        ht.Add(ring[i], list);
+            //    }
+            //}
+            //int[] steps = new int[ring.Length];
+            //for (int i = 0; i < steps.Length; i++)
+            //{
+            //    steps[i] = int.MaxValue;
+            //}
+            //List<int> list1 = (List<int>)ht[key[0]];
+            //foreach (int item in list1)
+            //    steps[item] = Math.Min(Math.Abs(item - 0), ring.Length - Math.Abs(item - 0));
+            //for (int i = 1; i < key.Length; i++)
+            //{
+            //    List<int> list = (List<int>)ht[key[i]];
+            //    foreach (int item in list)
+            //    {
+            //        List<int> prelist = (List<int>)ht[key[i - 1]];
+            //        int stepTemp = int.MaxValue;
+            //        foreach (int preItem in prelist)
+            //            stepTemp = Math.Min(stepTemp, Math.Min(Math.Abs(item - preItem), ring.Length - Math.Abs(item - preItem)) + steps[preItem]);
+            //        steps[item] = stepTemp;
+            //    }
+            //}
+            //int minStep = int.MaxValue;
+            //List<int> list2 = (List<int>)ht[key[key.Length - 1]];
+            //foreach (int item in list2)
+            //    minStep = Math.Min(minStep, steps[item]);
+            //return minStep + key.Length;
+
+            int ans = int.MaxValue;
+            Queue<int[]> queue = new Queue<int[]>();
+            Dictionary<char, List<int>> dic = new Dictionary<char, List<int>>();
+            int[,] min = new int[ring.Length, key.Length];
+            for (int i = 0; i < ring.Length; ++i)
+            {
+                char c = ring[i];
+                if (!dic.ContainsKey(c)) dic.Add(c, new List<int>());
+                dic[c].Add(i);
+            }
+            for (int i = 0; i < min.GetLength(0); ++i) for (int j = 0; j < min.GetLength(1); ++j) min[i, j] = int.MaxValue;
+            queue.Enqueue(new int[] { 0, 0, 0 });
+            while (queue.Count != 0)
+            {
+                int cur = queue.Peek()[0];
+                int index = queue.Peek()[1];
+                int steps = queue.Peek()[2];
+                queue.Dequeue();
+                if (index == key.Length)
+                {
+                    ans = Math.Min(ans, steps);
+                    continue;
+                }
+                foreach (int i in dic[key[index]])
+                {
+                    int step = Math.Min(Math.Abs(cur - i), ring.Length - Math.Abs(cur - i));
+                    if (steps + step + 1 < min[i, index])
+                    {
+                        queue.Enqueue(new int[] { i, index + 1, steps + step + 1 });
+                        min[i, index] = steps + step + 1;
+                    }
+                }
+            }
+            return ans;
         }
 
         /// <summary>
