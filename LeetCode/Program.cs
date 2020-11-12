@@ -127,8 +127,56 @@ namespace LeetCode
             //Console.WriteLine(SortByBits(new int[] { 2, 3, 5, 7, 11, 13, 17, 19 }));
             //Console.WriteLine(CountRangeSum(new int[] { -2, 5, -1 }, -2, 2));
             //var aa=KClosest(new int[][] { new int[] { 1, 3 }, new int[] { -2, 2 } },1);
-            Console.WriteLine(FindRotateSteps("godding", "gd"));
+            //Console.WriteLine(FindRotateSteps("godding", "gd"));
+            var a = SortArrayByParityII(new int[] { 4, 2, 5, 7 });
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 按奇偶排序数组 II
+        /// </summary>
+        /// <param name="A"></param>
+        /// <returns></returns>
+        public static int[] SortArrayByParityII(int[] A)
+        {
+            //int[] AA = new int[A.Length];
+            //int ii = 0; int jj = 1;
+            //for (int i = 0; i < A.Length; i++)
+            //{
+            //    if (A[i] % 2 == 0)
+            //    {
+            //        AA[ii] = A[i];
+            //        ii += 2;
+            //    }
+            //    else
+            //    {
+            //        AA[jj] = A[i];
+            //        jj += 2;
+            //    }
+            //}
+            //return AA;
+
+            int n = A.Length;
+            int j = 1;
+            for (int i = 0; i < n; i += 2)
+            {
+                if (A[i] % 2 == 1)
+                {
+                    while (A[j] % 2 == 1)
+                    {
+                        j += 2;
+                    }
+                    Swap(A, i, j);
+                }
+            }
+            return A;
+        }
+
+        public static void Swap(int[] A, int i, int j)
+        {
+            int temp = A[i];
+            A[i] = A[j];
+            A[j] = temp;
         }
 
         /// <summary>
