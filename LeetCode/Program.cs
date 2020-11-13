@@ -128,8 +128,34 @@ namespace LeetCode
             //Console.WriteLine(CountRangeSum(new int[] { -2, 5, -1 }, -2, 2));
             //var aa=KClosest(new int[][] { new int[] { 1, 3 }, new int[] { -2, 2 } },1);
             //Console.WriteLine(FindRotateSteps("godding", "gd"));
-            var a = SortArrayByParityII(new int[] { 4, 2, 5, 7 });
+            //var a = SortArrayByParityII(new int[] { 4, 2, 5, 7 });
+            ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))) };
+            Console.WriteLine(OddEvenList(head));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 奇偶链表
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static ListNode OddEvenList(ListNode head)
+        {
+            if (head == null)
+            {
+                return head;
+            }
+            ListNode evenHead = head.next;
+            ListNode odd = head, even = evenHead;
+            while (even != null && even.next != null)
+            {
+                odd.next = even.next;
+                odd = odd.next;
+                even.next = odd.next;
+                even = even.next;
+            }
+            odd.next = evenHead;
+            return head;
         }
 
         /// <summary>
