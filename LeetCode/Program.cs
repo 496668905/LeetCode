@@ -129,9 +129,88 @@ namespace LeetCode
             //var aa=KClosest(new int[][] { new int[] { 1, 3 }, new int[] { -2, 2 } },1);
             //Console.WriteLine(FindRotateSteps("godding", "gd"));
             //var a = SortArrayByParityII(new int[] { 4, 2, 5, 7 });
-            ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))) };
-            Console.WriteLine(OddEvenList(head));
+            //ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))) };
+            //Console.WriteLine(OddEvenList(head));
+            //SelectSort(new int[] { 1, 0, 5, 2, 7 });
+            var aa = RelativeSortArray(new int[] { 2, 3, 1, 3, 2, 4, 6, 19, 9, 2, 7 }, new int[] { 2, 1, 4, 3, 9, 6 });
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 数组的相对排序
+        /// </summary>
+        /// <param name="arr1"></param>
+        /// <param name="arr2"></param>
+        /// <returns></returns>
+        public static int[] RelativeSortArray(int[] arr1, int[] arr2)
+        {
+            //List<int> dest = new List<int>();
+            //List<int> arr2List = new List<int>(arr1);
+            //foreach (var item2 in arr2)
+            //{
+            //    for (int i = 0; i < arr2List.Count; i++)
+            //    {
+            //        if (arr2List[i] == item2)
+            //        {
+            //            dest.Add(item2);
+            //            arr2List.RemoveAt(i);
+            //            i--;
+            //        }
+            //    }
+            //}
+            //dest.AddRange(SelectSort(arr2List.ToArray()));
+            //return dest.ToArray();
+
+            int[] arr = new int[1001];
+            int[] res = new int[arr1.Length];
+            int index = 0;
+
+            foreach (var item in arr1)
+            {
+                arr[item]++;
+            }
+
+            foreach (var item in arr2)
+            {
+                while (arr[item]-- > 0)
+                {
+                    res[index++] = item;
+                }
+            }
+
+            for (int i = 0; i < 1001; i++)
+            {
+                while (arr[i]-- > 0)
+                {
+                    res[index++] = i;
+                }
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// 选择排序
+        /// </summary>
+        /// <param name="list"></param>
+        public static int[] SelectSort(int[] list)
+        {
+            int min, temp;
+            for (int i = 0; i < list.Length - 1; i++)
+            {
+                min = i;
+                for (int j = i + 1; j <= list.Length - 1; j++)
+                {
+                    if (list[min] > list[j])
+                    {
+                        min = j;
+                    }
+                }
+                temp = list[i];
+                list[i] = list[min];
+                list[min] = temp;
+            }
+            return list;
         }
 
         /// <summary>
