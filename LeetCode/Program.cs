@@ -132,8 +132,40 @@ namespace LeetCode
             //ListNode head = new ListNode() { val = 1, next = new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))) };
             //Console.WriteLine(OddEvenList(head));
             //SelectSort(new int[] { 1, 0, 5, 2, 7 });
-            var aa = RelativeSortArray(new int[] { 2, 3, 1, 3, 2, 4, 6, 19, 9, 2, 7 }, new int[] { 2, 1, 4, 3, 9, 6 });
+            //var aa = RelativeSortArray(new int[] { 2, 3, 1, 3, 2, 4, 6, 19, 9, 2, 7 }, new int[] { 2, 1, 4, 3, 9, 6 });
+            Console.WriteLine(RemoveKdigits("12345264", 5));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 移掉K位数字
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static string RemoveKdigits(string num, int k)
+        {
+            var stack = new LinkedList<char>();
+            foreach (var digit in num)
+            {
+                while (stack.Any() && k > 0 && stack.Last() > digit)
+                {
+                    stack.RemoveLast();
+                    k--;
+                }
+                stack.AddLast(digit);
+            }
+            for (int i = 0; i < k; i++) stack.RemoveLast();
+            bool isLeadingZero = true;
+            StringBuilder ans = new StringBuilder();
+            foreach (var digit in stack)
+            {
+                if (isLeadingZero && digit == '0') continue;
+                isLeadingZero = false;
+                ans.Append(digit);
+            }
+            if (ans.Length == 0) return "0";
+            return ans.ToString();
         }
 
         /// <summary>
