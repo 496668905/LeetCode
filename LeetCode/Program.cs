@@ -133,8 +133,35 @@ namespace LeetCode
             //Console.WriteLine(OddEvenList(head));
             //SelectSort(new int[] { 1, 0, 5, 2, 7 });
             //var aa = RelativeSortArray(new int[] { 2, 3, 1, 3, 2, 4, 6, 19, 9, 2, 7 }, new int[] { 2, 1, 4, 3, 9, 6 });
-            Console.WriteLine(RemoveKdigits("12345264", 5));
+            //Console.WriteLine(RemoveKdigits("12345264", 5));
+            Console.WriteLine(ReconstructQueue(new int[][] { new int[] {7, 0 }, new int[] { 4, 4 }, new int[] { 7,1 }, new int[] { 5, 0 }, new int[] { 6, 1 }, new int[] { 5, 2 } })); 
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 根据身高重建队列
+        /// </summary>
+        /// <param name="people"></param>
+        /// <returns></returns>
+        public static int[][] ReconstructQueue(int[][] people)
+        {
+            /*
+           排序+插入
+           1. 排序：按照先H高度降序，K个数升序排序
+           2. 插入：把矮个插入到 k 位置
+            */
+
+            Array.Sort(people, (p1, p2) => {
+                return p1[0] == p2[0] ? p1[1] - p2[1] : p2[0] - p1[0];
+            });
+
+            List<int[]> ans = new List<int[]>();
+            foreach (int[] i in people)
+            {
+                ans.Insert(i[1], i);
+            }
+
+            return ans.ToArray();
         }
 
         /// <summary>
