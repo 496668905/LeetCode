@@ -134,8 +134,60 @@ namespace LeetCode
             //SelectSort(new int[] { 1, 0, 5, 2, 7 });
             //var aa = RelativeSortArray(new int[] { 2, 3, 1, 3, 2, 4, 6, 19, 9, 2, 7 }, new int[] { 2, 1, 4, 3, 9, 6 });
             //Console.WriteLine(RemoveKdigits("12345264", 5));
-            Console.WriteLine(ReconstructQueue(new int[][] { new int[] {7, 0 }, new int[] { 4, 4 }, new int[] { 7,1 }, new int[] { 5, 0 }, new int[] { 6, 1 }, new int[] { 5, 2 } })); 
+            //Console.WriteLine(ReconstructQueue(new int[][] { new int[] {7, 0 }, new int[] { 4, 4 }, new int[] { 7,1 }, new int[] { 5, 0 }, new int[] { 6, 1 }, new int[] { 5, 2 } })); 
+            Console.WriteLine(AllCellsDistOrder(3, 3, 1, 1));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 距离顺序排列矩阵单元格
+        /// </summary>
+        /// <param name="R"></param>
+        /// <param name="C"></param>
+        /// <param name="r0"></param>
+        /// <param name="c0"></param>
+        /// <returns></returns>
+        public static int[][] AllCellsDistOrder(int R, int C, int r0, int c0)
+        {
+            //int[][] ret = new int[R * C][];
+            //for (int i = 0; i < R; i++)
+            //{
+            //    for (int j = 0; j < C; j++)
+            //    {
+            //        ret[i * C + j] = new int[] { i, j };
+            //    }
+            //}
+            //Array.Sort(ret, (p1, p2) =>
+            //{
+            //    return (Math.Abs(r0 - p1[0]) + Math.Abs(c0 - p1[1])) - (Math.Abs(r0 - p2[0]) + Math.Abs(c0 - p2[1]));
+            //});
+
+            //return ret;
+
+            int[] dr = { 1, 1, -1, -1 };
+            int[] dc = { 1, -1, -1, 1 };
+            int maxDist = Math.Max(r0, R - 1 - r0) + Math.Max(c0, C - 1 - c0);
+            int[][] ret = new int[R * C][];
+            int row = r0, col = c0;
+            int index = 0;
+            ret[index++] = new int[] { row, col };
+            for (int dist = 1; dist <= maxDist; dist++)
+            {
+                row--;
+                for (int i = 0; i < 4; i++)
+                {
+                    while ((i % 2 == 0 && row != r0) || (i % 2 != 0 && col != c0))
+                    {
+                        if (row >= 0 && row < R && col >= 0 && col < C)
+                        {
+                            ret[index++] = new int[] { row, col };
+                        }
+                        row += dr[i];
+                        col += dc[i];
+                    }
+                }
+            }
+            return ret;
         }
 
         /// <summary>
@@ -151,7 +203,8 @@ namespace LeetCode
            2. 插入：把矮个插入到 k 位置
             */
 
-            Array.Sort(people, (p1, p2) => {
+            Array.Sort(people, (p1, p2) =>
+            {
                 return p1[0] == p2[0] ? p1[1] - p2[1] : p2[0] - p1[0];
             });
 
