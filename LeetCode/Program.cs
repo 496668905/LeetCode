@@ -135,8 +135,46 @@ namespace LeetCode
             //var aa = RelativeSortArray(new int[] { 2, 3, 1, 3, 2, 4, 6, 19, 9, 2, 7 }, new int[] { 2, 1, 4, 3, 9, 6 });
             //Console.WriteLine(RemoveKdigits("12345264", 5));
             //Console.WriteLine(ReconstructQueue(new int[][] { new int[] {7, 0 }, new int[] { 4, 4 }, new int[] { 7,1 }, new int[] { 5, 0 }, new int[] { 6, 1 }, new int[] { 5, 2 } })); 
-            Console.WriteLine(AllCellsDistOrder(3, 3, 1, 1));
+            //Console.WriteLine(AllCellsDistOrder(3, 3, 1, 1));
+            Console.WriteLine(CanCompleteCircuit(new int[] { 1, 2, 3, 4, 5 },new int[] { 3, 4, 5, 1, 2 }));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 加油站
+        /// </summary>
+        /// <param name="gas"></param>
+        /// <param name="cost"></param>
+        /// <returns></returns>
+        public static int CanCompleteCircuit(int[] gas, int[] cost)
+        {
+            int n = gas.Length;
+            int i = 0;
+            while (i < n)
+            {
+                int sumOfGas = 0, sumOfCost = 0;
+                int cnt = 0;
+                while (cnt < n)
+                {
+                    int j = (i + cnt) % n;
+                    sumOfGas += gas[j];
+                    sumOfCost += cost[j];
+                    if (sumOfCost > sumOfGas)
+                    {
+                        break;
+                    }
+                    cnt++;
+                }
+                if (cnt == n)
+                {
+                    return i;
+                }
+                else
+                {
+                    i = i + cnt + 1;
+                }
+            }
+            return -1;
         }
 
         /// <summary>
