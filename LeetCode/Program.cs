@@ -136,8 +136,46 @@ namespace LeetCode
             //Console.WriteLine(RemoveKdigits("12345264", 5));
             //Console.WriteLine(ReconstructQueue(new int[][] { new int[] {7, 0 }, new int[] { 4, 4 }, new int[] { 7,1 }, new int[] { 5, 0 }, new int[] { 6, 1 }, new int[] { 5, 2 } })); 
             //Console.WriteLine(AllCellsDistOrder(3, 3, 1, 1));
-            Console.WriteLine(CanCompleteCircuit(new int[] { 1, 2, 3, 4, 5 },new int[] { 3, 4, 5, 1, 2 }));
+            //Console.WriteLine(CanCompleteCircuit(new int[] { 1, 2, 3, 4, 5 }, new int[] { 3, 4, 5, 1, 2 }));
+            MoveZeroes(new int[] { 0, 1, 0, 3, 12 });
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 移动零
+        /// </summary>
+        /// <param name="nums"></param>
+        public static void MoveZeroes(int[] nums)
+        {
+            //var indexs = new Queue<int>();
+            //for (int i = 0; i < nums.Length; i++)
+            //{
+            //    if (nums[i] == 0)
+            //    {
+            //        indexs.Enqueue(i);
+            //    }
+            //    else if (indexs.Any())
+            //    {
+            //        var index = indexs.Dequeue();
+            //        indexs.Enqueue(i);
+            //        nums[index] = nums[i];
+            //    }
+            //}
+            //for (int i = 0; i < indexs.Count; i++)
+            //{
+            //    nums[nums.Length - i - 1] = 0;
+            //}
+
+            int n = nums.Length, left = 0, right = 0;
+            while (right < n)
+            {
+                if (nums[right] != 0)
+                {
+                    Swap(nums, left, right);
+                    left++;
+                }
+                right++;
+            }
         }
 
         /// <summary>
