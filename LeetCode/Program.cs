@@ -137,8 +137,45 @@ namespace LeetCode
             //Console.WriteLine(ReconstructQueue(new int[][] { new int[] {7, 0 }, new int[] { 4, 4 }, new int[] { 7,1 }, new int[] { 5, 0 }, new int[] { 6, 1 }, new int[] { 5, 2 } })); 
             //Console.WriteLine(AllCellsDistOrder(3, 3, 1, 1));
             //Console.WriteLine(CanCompleteCircuit(new int[] { 1, 2, 3, 4, 5 }, new int[] { 3, 4, 5, 1, 2 }));
-            MoveZeroes(new int[] { 0, 1, 0, 3, 12 });
+            //MoveZeroes(new int[] { 0, 1, 0, 3, 12 });
+            var aa = InsertionSortList(new ListNode(-1, new ListNode(5, new ListNode(3, new ListNode(4, new ListNode(0))))));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 对链表进行插入排序
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static ListNode InsertionSortList(ListNode head)
+        {
+            if (head == null)
+            {
+                return head;
+            }
+            ListNode dummyHead = new ListNode(0);
+            dummyHead.next = head;
+            ListNode lastSorted = head, curr = head.next;
+            while (curr != null)
+            {
+                if (lastSorted.val <= curr.val)
+                {
+                    lastSorted = lastSorted.next;
+                }
+                else
+                {
+                    ListNode prev = dummyHead;
+                    while (prev.next.val <= curr.val)
+                    {
+                        prev = prev.next;
+                    }
+                    lastSorted.next = curr.next;
+                    curr.next = prev.next;
+                    prev.next = curr;
+                }
+                curr = lastSorted.next;
+            }
+            return dummyHead.next;
         }
 
         /// <summary>
