@@ -138,8 +138,110 @@ namespace LeetCode
             //Console.WriteLine(AllCellsDistOrder(3, 3, 1, 1));
             //Console.WriteLine(CanCompleteCircuit(new int[] { 1, 2, 3, 4, 5 }, new int[] { 3, 4, 5, 1, 2 }));
             //MoveZeroes(new int[] { 0, 1, 0, 3, 12 });
-            var aa = InsertionSortList(new ListNode(-1, new ListNode(5, new ListNode(3, new ListNode(4, new ListNode(0))))));
+            //var aa = InsertionSortList(new ListNode(-1, new ListNode(5, new ListNode(3, new ListNode(4, new ListNode(0))))));
+            //var aa = SortList(new ListNode(-1, new ListNode(5, new ListNode(3, new ListNode(4, new ListNode(0))))));
+            Console.WriteLine(IsAnagram("anagram", "nagaram"));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 有效的字母异位词
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static bool IsAnagram(string s, string t)
+        {
+            //如果长度不一样则肯定不是相同字符构成的
+            if (s.Length != t.Length)
+            {
+                return false;
+            }
+
+            //创建26只桶，A-Z
+            int[] check = new int[26];
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                check[s[i] - 'a']++;
+                check[t[i] - 'a']--;
+            }
+
+            foreach (int i in check)
+            {
+                if (i != 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 排序链表
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static ListNode SortList(ListNode head)
+        {
+            return SortList(head, null);
+        }
+
+        public static ListNode SortList(ListNode head, ListNode tail)
+        {
+            if (head == null)
+            {
+                return head;
+            }
+            if (head.next == tail)
+            {
+                head.next = null;
+                return head;
+            }
+            ListNode slow = head, fast = head;
+            while (fast != tail)
+            {
+                slow = slow.next;
+                fast = fast.next;
+                if (fast != tail)
+                {
+                    fast = fast.next;
+                }
+            }
+            ListNode mid = slow;
+            ListNode list1 = SortList(head, mid);
+            ListNode list2 = SortList(mid, tail);
+            ListNode sorted = Merge(list1, list2);
+            return sorted;
+        }
+
+        public static ListNode Merge(ListNode head1, ListNode head2)
+        {
+            ListNode dummyHead = new ListNode(0);
+            ListNode temp = dummyHead, temp1 = head1, temp2 = head2;
+            while (temp1 != null && temp2 != null)
+            {
+                if (temp1.val <= temp2.val)
+                {
+                    temp.next = temp1;
+                    temp1 = temp1.next;
+                }
+                else
+                {
+                    temp.next = temp2;
+                    temp2 = temp2.next;
+                }
+                temp = temp.next;
+            }
+            if (temp1 != null)
+            {
+                temp.next = temp1;
+            }
+            else if (temp2 != null)
+            {
+                temp.next = temp2;
+            }
+            return dummyHead.next;
         }
 
         /// <summary>
