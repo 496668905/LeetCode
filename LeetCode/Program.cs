@@ -140,8 +140,50 @@ namespace LeetCode
             //MoveZeroes(new int[] { 0, 1, 0, 3, 12 });
             //var aa = InsertionSortList(new ListNode(-1, new ListNode(5, new ListNode(3, new ListNode(4, new ListNode(0))))));
             //var aa = SortList(new ListNode(-1, new ListNode(5, new ListNode(3, new ListNode(4, new ListNode(0))))));
-            Console.WriteLine(IsAnagram("anagram", "nagaram"));
+            //Console.WriteLine(IsAnagram("anagram", "nagaram"));
+            //Console.WriteLine(FindMinArrowShots(new int[][] { new int[] { 10, 16 }, new int[] { 2, 8 }, new int[] { 1, 6 }, new int[] { 7, 12 } }));
+            Console.WriteLine(FindMinArrowShots(new int[][] { new int[] { -2147483646, -2147483645 }, new int[] { 2147483646, 2147483647 } }));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 用最少数量的箭引爆气球
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static int FindMinArrowShots(int[][] points)
+        {
+            if (points.Length == 0)
+            {
+                return 0;
+            }
+            Array.Sort(points, (point1, point2) =>
+            {
+                if (point1[1] > point2[1])
+                {
+                    return 1;
+                }
+                else if (point1[1] < point2[1])
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 0;
+                }
+                //return point1[1] - point2[1]; //错误
+            });
+            int pos = points[0][1];
+            int ans = 1;
+            foreach (var balloon in points)
+            {
+                if (balloon[0] > pos)
+                {
+                    pos = balloon[1];
+                    ++ans;
+                }
+            }
+            return ans;
         }
 
         /// <summary>
