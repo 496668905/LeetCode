@@ -142,8 +142,40 @@ namespace LeetCode
             //var aa = SortList(new ListNode(-1, new ListNode(5, new ListNode(3, new ListNode(4, new ListNode(0))))));
             //Console.WriteLine(IsAnagram("anagram", "nagaram"));
             //Console.WriteLine(FindMinArrowShots(new int[][] { new int[] { 10, 16 }, new int[] { 2, 8 }, new int[] { 1, 6 }, new int[] { 7, 12 } }));
-            Console.WriteLine(FindMinArrowShots(new int[][] { new int[] { -2147483646, -2147483645 }, new int[] { 2147483646, 2147483647 } }));
+            //Console.WriteLine(FindMinArrowShots(new int[][] { new int[] { -2147483646, -2147483645 }, new int[] { 2147483646, 2147483647 } }));
+            Console.WriteLine(CountNodes(new TreeNode(1, new TreeNode(2, new TreeNode(3)), new TreeNode(4))));
             Console.ReadKey();
+        }
+        static int n = 0;
+        /// <summary>
+        /// 完全二叉树的节点个数
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public static int CountNodes(TreeNode root)
+        {
+            //if (root != null)
+            //{
+            //    n++;
+            //}
+            //if (root?.left != null)
+            //{
+            //    CountNodes(root.left);
+            //}
+            //if (root?.right != null)
+            //{
+            //    CountNodes(root.right);
+            //}
+            //return n;
+
+            if (root == null)
+            {
+                return 0;
+            }
+            int left = CountNodes(root.left);
+            int right = CountNodes(root.right);
+
+            return left + right + 1;
         }
 
         /// <summary>
