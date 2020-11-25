@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Numerics;
 using System.Security;
@@ -143,9 +144,46 @@ namespace LeetCode
             //Console.WriteLine(IsAnagram("anagram", "nagaram"));
             //Console.WriteLine(FindMinArrowShots(new int[][] { new int[] { 10, 16 }, new int[] { 2, 8 }, new int[] { 1, 6 }, new int[] { 7, 12 } }));
             //Console.WriteLine(FindMinArrowShots(new int[][] { new int[] { -2147483646, -2147483645 }, new int[] { 2147483646, 2147483647 } }));
-            Console.WriteLine(CountNodes(new TreeNode(1, new TreeNode(2, new TreeNode(3)), new TreeNode(4))));
+            //Console.WriteLine(CountNodes(new TreeNode(1, new TreeNode(2, new TreeNode(3)), new TreeNode(4))));
+            Console.WriteLine(SortString("leetcode"));
             Console.ReadKey();
         }
+
+        /// <summary>
+        /// 上升下降字符串
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string SortString(string s)
+        {
+            StringBuilder sb = new StringBuilder();
+            int[] check = new int[26];
+            for (int i = 0; i < s.Length; i++)
+            {
+                check[s[i] - 'a']++;
+            }
+            while (sb.Length != s.Length)
+            {
+                for (int i = 0; i < check.Length; i++)
+                {
+                    if (check[i] > 0)
+                    {
+                        sb.Append((char)(i + 'a'));
+                        check[i]--;
+                    }
+                }
+                for (int i = check.Length - 1; i >= 0; i--)
+                {
+                    if (check[i] > 0)
+                    {
+                        sb.Append((char)(i + 'a'));
+                        check[i]--;
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
         static int n = 0;
         /// <summary>
         /// 完全二叉树的节点个数
