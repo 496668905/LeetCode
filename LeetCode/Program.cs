@@ -145,8 +145,77 @@ namespace LeetCode
             //Console.WriteLine(FindMinArrowShots(new int[][] { new int[] { 10, 16 }, new int[] { 2, 8 }, new int[] { 1, 6 }, new int[] { 7, 12 } }));
             //Console.WriteLine(FindMinArrowShots(new int[][] { new int[] { -2147483646, -2147483645 }, new int[] { 2147483646, 2147483647 } }));
             //Console.WriteLine(CountNodes(new TreeNode(1, new TreeNode(2, new TreeNode(3)), new TreeNode(4))));
-            Console.WriteLine(SortString("leetcode"));
+            //Console.WriteLine(SortString("leetcode"));
+            Console.WriteLine(MaximumGap(new int[] { 3, 6, 9, 1 }));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 最大间距
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static int MaximumGap(int[] nums)
+        {
+            //if (nums.Length < 2)
+            //{
+            //    return 0;
+            //}
+            //Array.Sort(nums);
+            //int front = nums[0];
+            //int max = 0;
+            //foreach (var item in nums)
+            //{
+            //    max = Math.Max(max, item - front);
+            //    front = item;
+            //}
+            //return max;
+
+            int n = nums.Length;
+            if (n < 2)
+            {
+                return 0;
+            }
+            int minVal = nums.Min();
+            int maxVal = nums.Max();
+            int d = Math.Max(1, (maxVal - minVal) / (n - 1));
+            int bucketSize = (maxVal - minVal) / d + 1;
+
+            int[][] bucket = new int[bucketSize][];
+            
+            for (int i = 0; i < bucketSize; ++i)
+            {
+                bucket[i] = new int[] { -1, -1 };// 存储 (桶内最小值，桶内最大值) 对， (-1, -1) 表示该桶是空的
+            }
+            for (int i = 0; i < n; i++)
+            {
+                int idx = (nums[i] - minVal) / d;
+                if (bucket[idx][0] == -1)
+                {
+                    bucket[idx][0] = bucket[idx][1] = nums[i];
+                }
+                else
+                {
+                    bucket[idx][0] = Math.Min(bucket[idx][0], nums[i]);
+                    bucket[idx][1] = Math.Max(bucket[idx][1], nums[i]);
+                }
+            }
+
+            int ret = 0;
+            int prev = -1;
+            for (int i = 0; i < bucketSize; i++)
+            {
+                if (bucket[i][0] == -1)
+                {
+                    continue;
+                }
+                if (prev != -1)
+                {
+                    ret = Math.Max(ret, bucket[i][0] - bucket[prev][1]);
+                }
+                prev = i;
+            }
+            return ret;
         }
 
         /// <summary>
