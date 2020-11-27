@@ -146,8 +146,50 @@ namespace LeetCode
             //Console.WriteLine(FindMinArrowShots(new int[][] { new int[] { -2147483646, -2147483645 }, new int[] { 2147483646, 2147483647 } }));
             //Console.WriteLine(CountNodes(new TreeNode(1, new TreeNode(2, new TreeNode(3)), new TreeNode(4))));
             //Console.WriteLine(SortString("leetcode"));
-            Console.WriteLine(MaximumGap(new int[] { 3, 6, 9, 1 }));
+            //Console.WriteLine(MaximumGap(new int[] { 3, 6, 9, 1 }));
+            Console.WriteLine(FourSumCount(new int[] { 1, 2 }, new int[] { -2, -1 }, new int[] { -1, 2 }, new int[] { 0, 2 }));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 四数相加 II
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <param name="C"></param>
+        /// <param name="D"></param>
+        /// <returns></returns>
+        public static int FourSumCount(int[] A, int[] B, int[] C, int[] D)
+        {
+            //分组 + 哈希表
+            Dictionary<int, int> countAB = new Dictionary<int, int>();
+            foreach (var u in A)
+            {
+                foreach (var v in B)
+                {
+                    if (!countAB.ContainsKey(u + v))
+                    {
+                        countAB.Add(u + v, 1);
+                    }
+                    else
+                    {
+                        countAB[u + v]++;
+                    }
+
+                }
+            }
+            int ans = 0;
+            foreach (var u in C)
+            {
+                foreach (var v in D)
+                {
+                    if (countAB.ContainsKey(-u - v))
+                    {
+                        ans += countAB[-u - v];
+                    }
+                }
+            }
+            return ans;
         }
 
         /// <summary>
@@ -182,7 +224,7 @@ namespace LeetCode
             int bucketSize = (maxVal - minVal) / d + 1;
 
             int[][] bucket = new int[bucketSize][];
-            
+
             for (int i = 0; i < bucketSize; ++i)
             {
                 bucket[i] = new int[] { -1, -1 };// 存储 (桶内最小值，桶内最大值) 对， (-1, -1) 表示该桶是空的
