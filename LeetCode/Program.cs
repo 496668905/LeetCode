@@ -147,8 +147,39 @@ namespace LeetCode
             //Console.WriteLine(CountNodes(new TreeNode(1, new TreeNode(2, new TreeNode(3)), new TreeNode(4))));
             //Console.WriteLine(SortString("leetcode"));
             //Console.WriteLine(MaximumGap(new int[] { 3, 6, 9, 1 }));
-            Console.WriteLine(FourSumCount(new int[] { 1, 2 }, new int[] { -2, -1 }, new int[] { -1, 2 }, new int[] { 0, 2 }));
+            //Console.WriteLine(FourSumCount(new int[] { 1, 2 }, new int[] { -2, -1 }, new int[] { -1, 2 }, new int[] { 0, 2 }));
+            Console.WriteLine(LargestPerimeter(new int[] { 3, 9, 2, 5, 2, 19 }));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 三角形的最大周长
+        /// </summary>
+        /// <param name="A"></param>
+        /// <returns></returns>
+        public static int LargestPerimeter(int[] A)
+        {
+            //假设三角形的边长满足a<=b<=c，那么这三条边组成面积不为零的三角形的充分必要条件为 a+b>c
+            //int max = 0;
+            //Array.Sort(A);
+            //for (int i = 0; i < A.Length; i++)
+            //{
+            //    if (i + 3 <= A.Length && A[i] + A[i + 1] > A[i + 2] && A[i] - A[i + 1] < A[i + 2])
+            //    {
+            //        max = Math.Max(max, A[i] + A[i + 1] + A[i + 2]);
+            //    }
+            //}
+            //return max;
+
+            Array.Sort(A);
+            for (int i = A.Length - 1; i >= 2; --i)
+            {
+                if (A[i - 2] + A[i - 1] > A[i])
+                {
+                    return A[i - 2] + A[i - 1] + A[i];
+                }
+            }
+            return 0;
         }
 
         /// <summary>
