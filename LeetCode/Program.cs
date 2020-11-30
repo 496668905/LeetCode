@@ -148,8 +148,42 @@ namespace LeetCode
             //Console.WriteLine(SortString("leetcode"));
             //Console.WriteLine(MaximumGap(new int[] { 3, 6, 9, 1 }));
             //Console.WriteLine(FourSumCount(new int[] { 1, 2 }, new int[] { -2, -1 }, new int[] { -1, 2 }, new int[] { 0, 2 }));
-            Console.WriteLine(LargestPerimeter(new int[] { 3, 9, 2, 5, 2, 19 }));
+            //Console.WriteLine(LargestPerimeter(new int[] { 3, 9, 2, 5, 2, 19 }));
+            Console.WriteLine(ReorganizeString("aab"));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 重构字符串
+        /// </summary>
+        /// <param name="S"></param>
+        /// <returns></returns>
+        public static string ReorganizeString(string S)
+        {
+            // 出现次数最多的字母有没有超过一半
+            var mid = (S.Length + 1) / 2;
+            // 计数
+            var dict = S.GroupBy(x => x)
+                        .OrderByDescending(x => x.Count())
+                        .ToDictionary(x => x.Key, x => x.Count());
+
+            if (dict.Values.All(x => x <= mid))
+            {
+                var arr = new char[S.Length];
+                Action<int> action = (i) =>
+                {
+                    var key = dict.Keys.First();
+                    arr[i] = key;
+                    dict[key]--;
+                    if (dict[key] <= 0) dict.Remove(key);
+                };
+                // 交替生成
+                for (int i = 0; i < arr.Length; i += 2) action(i);
+                for (int i = 1; i < arr.Length; i += 2) action(i);
+
+                return new string(arr);
+            }
+            return "";
         }
 
         /// <summary>
