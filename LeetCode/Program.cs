@@ -149,9 +149,55 @@ namespace LeetCode
             //Console.WriteLine(MaximumGap(new int[] { 3, 6, 9, 1 }));
             //Console.WriteLine(FourSumCount(new int[] { 1, 2 }, new int[] { -2, -1 }, new int[] { -1, 2 }, new int[] { 0, 2 }));
             //Console.WriteLine(LargestPerimeter(new int[] { 3, 9, 2, 5, 2, 19 }));
-            Console.WriteLine(ReorganizeString("aab"));
+            //Console.WriteLine(ReorganizeString("aab"));
+            Console.WriteLine(SearchRange(new int[] { 1,2,2,2,4 }, 2));
             Console.ReadKey();
         }
+
+        /// <summary>
+        /// 在排序数组中查找元素的第一个和最后一个位置
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static int[] SearchRange(int[] nums, int target)
+        {
+            //int firstIndex = Array.IndexOf(nums, target);
+            //int lastIndex = Array.LastIndexOf(nums, target);
+            //if (firstIndex == 0 && nums[0] != target)
+            //{
+            //    return new int[] { 1, 1 };
+            //}
+            //return new int[] { firstIndex, lastIndex };
+
+            int leftIdx = BinarySearch(nums, target, true);
+            int rightIdx = BinarySearch(nums, target, false) - 1;
+            if (leftIdx <= rightIdx && rightIdx < nums.Length && nums[leftIdx] == target && nums[rightIdx] == target)
+            {
+                return new int[] { leftIdx, rightIdx };
+            }
+            return new int[] { -1, -1 };
+        }
+
+        public static int BinarySearch(int[] nums, int target, bool lower)
+        {
+            int left = 0, right = nums.Length - 1, ans = nums.Length;
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                if (nums[mid] > target || (lower && nums[mid] >= target))
+                {
+                    right = mid - 1;
+                    ans = mid;
+                }
+                else
+                {
+                    left = mid + 1;
+                }
+            }
+            return ans;
+        }
+
 
         /// <summary>
         /// 重构字符串
