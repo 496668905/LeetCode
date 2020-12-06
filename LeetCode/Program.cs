@@ -1,8 +1,10 @@
-﻿using Microsoft.VisualBasic.CompilerServices;
+﻿using HeapPriorityQueue;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Security;
@@ -150,8 +152,258 @@ namespace LeetCode
             //Console.WriteLine(FourSumCount(new int[] { 1, 2 }, new int[] { -2, -1 }, new int[] { -1, 2 }, new int[] { 0, 2 }));
             //Console.WriteLine(LargestPerimeter(new int[] { 3, 9, 2, 5, 2, 19 }));
             //Console.WriteLine(ReorganizeString("aab"));
-            Console.WriteLine(SearchRange(new int[] { 1,2,2,2,4 }, 2));
+            //Console.WriteLine(SearchRange(new int[] { 1, 2, 2, 2, 4 }, 2));
+            //Console.WriteLine(MaxNumber(new int[] { 2, 6, 2, 3 }, new int[] { 9, 1 }, 5));
+            //Console.WriteLine(CountPrimes(10));
+            //Console.WriteLine(IsPossible1(new int[] { 1, 2, 3, 3, 4, 4, 5, 5 }));
+
+            Console.WriteLine(Generate(5));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 杨辉三角
+        /// </summary>
+        /// <param name="numRows"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> Generate(int numRows)
+        {
+            //IList<IList<int>> result = new List<IList<int>>();
+            //if (numRows == 0)
+            //{
+            //    return result;
+            //}
+            //List<int> index = new List<int>();
+            //index.Add(1);
+            //result.Add(index);
+            //for (int i = 1; i < numRows; i++)
+            //{
+            //    index = new List<int>();
+            //    index.Add(1);
+            //    if (result[i - 1].Count > 1)
+            //    {
+            //        for (int j = 0; j < result[i - 1].Count; j++)
+            //        {
+            //            if (j + 1 < result[i - 1].Count)
+            //            {
+            //                index.Add(result[i - 1][j] + result[i - 1][j + 1]);
+            //            }
+            //        }
+            //    }
+            //    index.Add(1);
+            //    result.Add(index);
+            //}
+            //return result;
+
+            IList<IList<int>> ret = new List<IList<int>>();
+            for (int i = 0; i < numRows; ++i)
+            {
+                List<int> row = new List<int>();
+                for (int j = 0; j <= i; ++j)
+                {
+                    if (j == 0 || j == i)
+                    {
+                        row.Add(1);
+                    }
+                    else
+                    {
+                        row.Add(ret[i - 1][j - 1] + ret[i - 1][j]);
+                    }
+                }
+                ret.Add(row);
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// 任务调度器
+        /// </summary>
+        /// <param name="tasks"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public int LeastInterval(char[] tasks, int n)
+        {
+            // 第一步 统计每种任务的数量
+            int[] types = new int[26];
+            foreach (char item in tasks)
+            {
+                types[item - 'A'] = types[item - 'A'] + 1;
+            }
+
+            // 第二步 对任务数量进行排序
+            Array.Sort(types);
+
+            //第三步 根据任务量最多（如A任务）的任务计算时间
+            int max = types[25];
+            int time = (max - 1) * (n + 1) + 1;  // 最多任务为max，那么间隔有max-1个，间隔时间加上本身任务的运行时间
+            int i = 24;
+
+            //第四步 检查是否还有和任务最多数量一样多的任务，统计最后一个A运行完之后是否还有任务，这取决于和A数量一样多的任务
+            while (i >= 0 && types[i] == max)
+            {
+                time++;
+                i--;
+            }
+            return Math.Max(time, tasks.Length);
+        }
+
+        /// <summary>
+        /// 分割数组为连续子序列(官方)
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static bool IsPossible1(int[] nums)
+        {
+            Dictionary<int, PriorityQueue<int>> map = new Dictionary<int, PriorityQueue<int>>();
+            foreach (var x in nums)
+            {
+                if (!map.ContainsKey(x))
+                {
+                    map.Add(x, new PriorityQueue<int>(0, new HeadComparer()));
+                }
+                if (map.ContainsKey(x - 1))
+                {
+                    int prevLength = map[x - 1].Top;
+                    map[x - 1].Pop();
+                    if (map[x - 1].Count == 0)
+                    {
+                        map.Remove(x - 1);
+                    }
+                    map[x].Push(prevLength + 1);
+                }
+                else
+                {
+                    map[x].Push(1);
+                }
+            }
+            HashSet<KeyValuePair<int, PriorityQueue<int>>> entrySet = map.ToHashSet();
+            foreach (var entry in entrySet)
+            {
+                PriorityQueue<int> queue = entry.Value;
+                if (queue.Top < 3)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public class HeadComparer : IComparer<int>
+        {
+            public int Compare(int x, int y)
+            {
+                return x - y;
+            }
+        }
+        /// <summary>
+        /// 分割数组为连续子序列
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static bool IsPossible(int[] nums)
+        {
+            //新建两个字典
+            Dictionary<int, int> dic1 = new Dictionary<int, int>(); //存储原数组中数字i出现的次数
+            Dictionary<int, int> dic2 = new Dictionary<int, int>();//存储以数字i结尾的且符合题意的连续子序列个数
+                                                                   //以nums =[1, 2, 3, 3, 4, 4, 5]
+                                                                   //初始化：dic1[1] = 1、dic1[2] = 1、dic1[3] = 2、dic1[4] = 2、dic1[5] = 1，dic2[i]都为0
+            foreach (var item in nums)
+            {
+                if (dic1.ContainsKey(item))
+                {
+                    dic1[item]++;
+                }
+                else
+                {
+                    dic1.Add(item, 1);
+                }
+            }
+            foreach (var item in nums)
+            {
+                //检查数字 1, dic1[1] > 0,并且 dic1[2]> 0,dic1[3] > 0，因此找到了一个长度为3的连续子序列 dic1[1]、dic1[2]、dic1[3] 各自减一，并 dic2[3] 加 1
+                int count = dic1[item];
+                if (count > 0)
+                {
+                    //判断item上一个结尾
+                    int prevCount = dic2.GetValueOrDefault(item - 1, 0);
+                    //如果大于0就就把item接到dic2上,dic2[item-1]-1;dic2[item]+1
+                    if (prevCount > 0)
+                    {
+                        dic1[item] = count - 1;
+                        if (dic2.ContainsKey(item - 1))
+                        {
+                            dic2[item - 1] = prevCount - 1;
+                        }
+                        else
+                        {
+                            dic2.Add(item - 1, prevCount - 1);
+                        }
+                        if (dic2.ContainsKey(item))
+                        {
+                            dic2[item] = dic2.GetValueOrDefault(item, 0) + 1;
+                        }
+                        else
+                        {
+                            dic2.Add(item, dic2.GetValueOrDefault(item, 0) + 1);
+                        }
+
+                    }
+                    else
+                    {
+                        //但是 dic2[2]=0，因此不能接在前面，只能往后看(如果后面组不成，那就返回 false了)
+                        int count1 = dic1.GetValueOrDefault(item + 1, 0);
+                        int count2 = dic1.GetValueOrDefault(item + 2, 0);
+                        if (count1 > 0 && count2 > 0)
+                        {
+                            //实际发现 dic1[4]>0,dic1[5]>0，因此找到了一个长度为3的连续子序列 dic1[3]、dic1[4]、dic1[5] 各自减一，并 dic2[5] 加 1
+                            dic1[item] = count - 1;
+                            dic1[item + 1] = count1 - 1;
+                            dic1[item + 2] = count2 - 1;
+                            if (dic2.ContainsKey(item + 2))
+                            {
+                                dic2[item + 2] = dic2[item + 2] + 1;
+                            }
+                            else
+                            {
+                                dic2.Add(item + 2, 1);
+                            }
+
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 计数质数
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static int CountPrimes(int n)
+        {
+            int ans = 0;
+            for (int i = 2; i < n; i++)
+            {
+                ans += IsPrime(i) ? 1 : 0;
+            }
+            return ans;
+        }
+
+        public static bool IsPrime(int x)
+        {
+            for (int i = 2; i * i <= x; ++i)
+            {
+                if (x % i == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>

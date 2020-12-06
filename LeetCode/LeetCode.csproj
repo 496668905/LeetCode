@@ -5,4 +5,10 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="HeapPriorityQueue">
+      <HintPath>..\..\..\ConsoleApp4\HeapPriorityQueue\bin\Debug\netstandard2.0\HeapPriorityQueue.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
