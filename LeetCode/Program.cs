@@ -156,9 +156,79 @@ namespace LeetCode
             //Console.WriteLine(MaxNumber(new int[] { 2, 6, 2, 3 }, new int[] { 9, 1 }, 5));
             //Console.WriteLine(CountPrimes(10));
             //Console.WriteLine(IsPossible1(new int[] { 1, 2, 3, 3, 4, 4, 5, 5 }));
-
+            Console.WriteLine(LemonadeChange(new int[] { 10, 10 }));
             Console.WriteLine(Generate(5));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 柠檬水找零
+        /// </summary>
+        /// <param name="bills"></param>
+        /// <returns></returns>
+        public static bool LemonadeChange(int[] bills)
+        {
+            int five = 0, ten = 0;
+            foreach (var item in bills)
+            {
+                if (item == 5)
+                {
+                    five++;
+                }
+                else if (item == 10)
+                {
+                    if (five == 0)
+                    {
+                        return false;
+                    }
+                    ten++;
+                    five--;
+                }
+                else
+                {
+                    if (five > 0 && ten > 0)
+                    {
+                        ten--;
+                        five--;
+                    }
+                    else if (five >= 3)
+                    {
+                        five -= 3;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 不同路径
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static int UniquePaths(int m, int n)
+        {
+            int[,] dp = new int[m, n];
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == 0 || j == 0)
+                    {
+                        dp[i, j] = 1;
+
+                    }
+                    else
+                    {
+                        dp[i, j] = dp[i - 1, j] + dp[i, j - 1];
+                    }
+                }
+            }
+            return dp[m - 1, n - 1];
         }
 
         /// <summary>
