@@ -156,9 +156,47 @@ namespace LeetCode
             //Console.WriteLine(MaxNumber(new int[] { 2, 6, 2, 3 }, new int[] { 9, 1 }, 5));
             //Console.WriteLine(CountPrimes(10));
             //Console.WriteLine(IsPossible1(new int[] { 1, 2, 3, 3, 4, 4, 5, 5 }));
-            Console.WriteLine(LemonadeChange(new int[] { 10, 10 }));
-            Console.WriteLine(Generate(5));
+            //Console.WriteLine(LemonadeChange(new int[] { 10, 10 }));
+            //Console.WriteLine(Generate(5));
+            Console.WriteLine(PredictPartyVictory("RDD"));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Dota2 参议院
+        /// </summary>
+        /// <param name="senate"></param>
+        /// <returns></returns>
+        public static string PredictPartyVictory(string senate)
+        {
+            int n = senate.Length;
+            Queue<int> radiant = new Queue<int>();
+            Queue<int> dire = new Queue<int>();
+            for (int i = 0; i < n; i++)
+            {
+                if (senate[i] == 'R')
+                {
+                    radiant.Enqueue(i);
+                }
+                else
+                {
+                    dire.Enqueue(i);
+                }
+            }
+            while (radiant.Count > 0 && dire.Count > 0)
+            {
+                int radiantIndex = radiant.Dequeue();
+                int direIndex = dire.Dequeue();
+                if (radiantIndex < direIndex)
+                {
+                    radiant.Enqueue(radiantIndex + n);
+                }
+                else
+                {
+                    dire.Enqueue(direIndex + n);
+                }
+            }
+            return radiant.Count > 0 ? "Radiant" : "Dire";
         }
 
         /// <summary>
