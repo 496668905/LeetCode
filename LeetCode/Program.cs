@@ -163,6 +163,24 @@ namespace LeetCode
         }
 
         /// <summary>
+        /// 存在重复元素
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static bool ContainsDuplicate(int[] nums)
+        {
+            var repeat = new HashSet<int>();
+            foreach (var item in nums)
+            {
+                if (!repeat.Add(item))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Dota2 参议院
         /// </summary>
         /// <param name="senate"></param>
