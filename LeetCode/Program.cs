@@ -158,8 +158,167 @@ namespace LeetCode
             //Console.WriteLine(IsPossible1(new int[] { 1, 2, 3, 3, 4, 4, 5, 5 }));
             //Console.WriteLine(LemonadeChange(new int[] { 10, 10 }));
             //Console.WriteLine(Generate(5));
-            Console.WriteLine(PredictPartyVictory("RDD"));
+            //Console.WriteLine(PredictPartyVictory("RDD"));
+            //Console.WriteLine(GroupAnagrams(new string[] { "eat", "tea", "tan", "ate", "nat", "bat" }));
+            //Console.WriteLine(MonotoneIncreasingDigits(1332));
+            Console.WriteLine(MaxProfit(new int[] { 1, 3, 2, 8, 4, 9 }, 2));
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 买卖股票的最佳时机含手续费
+        /// </summary>
+        /// <param name="prices"></param>
+        /// <param name="fee"></param>
+        /// <returns></returns>
+        public static int MaxProfit(int[] prices, int fee)
+        {
+            /*[1, 3, 2, 8, 4, 9] 2->能够达到的最大利润:
+            在此处买入 prices[0] = 1
+            在此处卖出 prices[3] = 8
+            在此处买入 prices[4] = 4
+            在此处卖出 prices[5] = 9
+            总利润: ((8 - 1) - 2) + ((9 - 4) - 2) = 8*/
+            int n = prices.Length;
+            int[,] dp = new int[n, 2];
+            dp[0, 0] = 0;
+            dp[0, 1] = -prices[0];
+            for (int i = 1; i < n; ++i)
+            {
+                dp[i, 0] = Math.Max(dp[i - 1, 0], dp[i - 1, 1] + prices[i] - fee);
+                dp[i, 1] = Math.Max(dp[i - 1, 1], dp[i - 1, 0] - prices[i]);
+            }
+            return dp[n - 1, 0];
+
+            //int n = prices.Length;
+            //int buy = prices[0] + fee;
+            //int profit = 0;
+            //for (int i = 1; i < n; ++i)
+            //{
+            //    if (prices[i] + fee < buy)
+            //    {
+            //        buy = prices[i] + fee;
+            //    }
+            //    else if (prices[i] > buy)
+            //    {
+            //        profit += prices[i] - buy;
+            //        buy = prices[i];
+            //    }
+            //}
+            //return profit;
+        }
+
+        /// <summary>
+        /// 单词规律
+        /// </summary>
+        /// <param name="pattern"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static bool WordPattern(string pattern, string s)
+        {
+            string[] tmp = s.Split(' ');
+            Dictionary<char, string> keyValuePairs = new Dictionary<char, string>();
+            if (pattern.Length != tmp.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < pattern.Length; i++)
+            {
+                if (keyValuePairs.ContainsKey(pattern[i]))
+                {
+                    if (!keyValuePairs[pattern[i]].Equals(tmp[i]))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (keyValuePairs.ContainsValue(tmp[i]))
+                    {
+                        return false;
+                    }
+                    keyValuePairs.Add(pattern[i], tmp[i]);
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        ///  单调递增的数字
+        /// </summary>
+        /// <param name="N"></param>
+        /// <returns></returns>
+        public static int MonotoneIncreasingDigits(int N)
+        {
+            //超出时间限制
+            //for (int i = N; i >= 0; i--)
+            //{
+            //    var charArrary = i.ToString().ToCharArray();
+            //    Array.Sort(charArrary);
+            //    while (new String(charArrary) == i.ToString())
+            //    {
+            //        return i;
+            //    }
+            //}
+            //return 0;
+
+            //char[] strN = N.ToString().ToCharArray();
+            //int i = 1;
+            //while (i < strN.Length && strN[i - 1] <= strN[i])
+            //{
+            //    i += 1;
+            //}
+            //if (i < strN.Length)
+            //{
+            //    while (i > 0 && strN[i - 1] > strN[i])
+            //    {
+            //        strN[i - 1] = (char)(strN[i - 1]-1);
+            //        i -= 1;
+            //    }
+            //    for (i += 1; i < strN.Length; ++i)
+            //    {
+            //        strN[i] = '9';
+            //    }
+            //}
+            //return int.Parse(new String(strN));
+
+            int i = 1;
+            while (i <= N)
+            {
+                int n = N / i % 100; // 每次取两个位
+                i *= 10;//相乘之后再赋值
+                if (n / 10 > n % 10) // 比较的高一位大于底一位
+                    N = N / i * i - 1; //例如1332 循环第一次变为1330-1=1329 第二次变为1300-1=1299
+            }
+            return N;
+        }
+
+        /// <summary>
+        /// 字母异位词分组
+        /// </summary>
+        /// <param name="strs"></param>
+        /// <returns></returns>
+        public static IList<IList<string>> GroupAnagrams(string[] strs)
+        {
+            Dictionary<string, IList<string>> map = new Dictionary<string, IList<string>>();
+            foreach (string s in strs)
+            {
+                string key = BuildKey(s);
+                if (!map.ContainsKey(key))
+                {
+                    map.Add(key, new List<string>());
+                }
+                map[key].Add(s);
+            }
+            return map.Values.ToList();
+        }
+
+        static private string BuildKey(string str)
+        {
+            char[] chars = str.ToCharArray();
+            Array.Sort(chars);
+            return new String(chars);
         }
 
         /// <summary>
