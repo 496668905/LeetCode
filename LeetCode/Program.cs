@@ -160,9 +160,30 @@ namespace LeetCode
             //Console.WriteLine(Generate(5));
             //Console.WriteLine(PredictPartyVictory("RDD"));
             //Console.WriteLine(GroupAnagrams(new string[] { "eat", "tea", "tan", "ate", "nat", "bat" }));
-            //Console.WriteLine(MonotoneIncreasingDigits(1332));
-            Console.WriteLine(MaxProfit(new int[] { 1, 3, 2, 8, 4, 9 }, 2));
+            //Console.WriteLine(MonotoneIncreasingDigits(332));
+            //Console.WriteLine(MaxProfit(new int[] { 1, 3, 2, 8, 4, 9 }, 2));
+            Rotate(new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6 }, new int[] { 7, 8, 9 } });
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// 旋转图像
+        /// </summary>
+        /// <param name="matrix"></param>
+        public static void Rotate(int[][] matrix)
+        {
+            int n = matrix.Length;
+            for (int i = 0; i < n / 2; ++i)
+            {
+                for (int j = 0; j < (n + 1) / 2; ++j)
+                {
+                    int temp = matrix[i][j];
+                    matrix[i][j] = matrix[n - j - 1][i];
+                    matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1];
+                    matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1];
+                    matrix[j][n - i - 1] = temp;
+                }
+            }
         }
 
         /// <summary>
@@ -263,35 +284,35 @@ namespace LeetCode
             //}
             //return 0;
 
-            //char[] strN = N.ToString().ToCharArray();
-            //int i = 1;
-            //while (i < strN.Length && strN[i - 1] <= strN[i])
-            //{
-            //    i += 1;
-            //}
-            //if (i < strN.Length)
-            //{
-            //    while (i > 0 && strN[i - 1] > strN[i])
-            //    {
-            //        strN[i - 1] = (char)(strN[i - 1]-1);
-            //        i -= 1;
-            //    }
-            //    for (i += 1; i < strN.Length; ++i)
-            //    {
-            //        strN[i] = '9';
-            //    }
-            //}
-            //return int.Parse(new String(strN));
-
+            char[] strN = N.ToString().ToCharArray();
             int i = 1;
-            while (i <= N)
+            while (i < strN.Length && strN[i - 1] <= strN[i])
             {
-                int n = N / i % 100; // 每次取两个位
-                i *= 10;//相乘之后再赋值
-                if (n / 10 > n % 10) // 比较的高一位大于底一位
-                    N = N / i * i - 1; //例如1332 循环第一次变为1330-1=1329 第二次变为1300-1=1299
+                i += 1;
             }
-            return N;
+            if (i < strN.Length)
+            {
+                while (i > 0 && strN[i - 1] > strN[i])
+                {
+                    strN[i - 1] = (char)(strN[i - 1] - 1);
+                    i -= 1;
+                }
+                for (i += 1; i < strN.Length; ++i)
+                {
+                    strN[i] = '9';
+                }
+            }
+            return int.Parse(new string(strN));
+
+            //int i = 1;
+            //while (i <= N)
+            //{
+            //    int n = N / i % 100; // 每次取两个位
+            //    i *= 10;//相乘之后再赋值
+            //    if (n / 10 > n % 10) // 比较的高一位大于底一位
+            //        N = N / i * i - 1; //例如1332 循环第一次变为1330-1=1329 第二次变为1300-1=1299
+            //}
+            //return N;
         }
 
         /// <summary>
